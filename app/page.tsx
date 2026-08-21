@@ -1,19 +1,35 @@
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
+
+import { buttonVariants } from "@/components/ui/button"
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
+    <main className="flex min-h-svh items-center justify-center p-6">
+      <div className="flex w-full max-w-lg flex-col gap-6">
+        <div className="space-y-3">
+          <p className="text-sm text-muted-foreground">Frontend Assignment</p>
+
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Advanced CRM Dashboard
+          </h1>
+
+          <p className="text-muted-foreground">
+            A production-style CRM dashboard for managing customers, search,
+            sorting, filtering, customer CRUD, saved filters, and drag-and-drop
+            ordering.
+          </p>
         </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
+
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className={buttonVariants()}>
+            Open Dashboard
+          </Link>
         </div>
+
+        <p className="font-mono text-xs text-muted-foreground">
+          Next.js · TypeScript · Tailwind CSS · shadcn/ui
+        </p>
       </div>
-    </div>
+    </main>
   )
 }
