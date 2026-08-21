@@ -2,7 +2,12 @@ import * as React from "react"
 import type { LucideIcon } from "lucide-react"
 import { LayoutDashboard, Users } from "lucide-react"
 
-import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarRail,
+} from "@/components/ui/sidebar"
 
 import { Logo } from "./logo"
 import NavMenu from "./nav-menu"
@@ -44,9 +49,7 @@ const data: SidebarData = {
   ],
 }
 
-export function AppSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="pt-4">

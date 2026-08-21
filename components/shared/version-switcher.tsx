@@ -13,7 +13,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { GalleryVerticalEndIcon, ChevronsUpDownIcon, CheckIcon } from "lucide-react"
+import {
+  GalleryVerticalEndIcon,
+  ChevronsUpDownIcon,
+  CheckIcon,
+} from "lucide-react"
 
 export function VersionSwitcher({
   versions,
