@@ -34,3 +34,8 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# docs
+01-PRD.md
+02-TDD.md
+03-DEVELOPMENT.md
