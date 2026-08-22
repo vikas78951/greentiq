@@ -36,4 +36,3 @@ export async function DELETE(
 
   return deleteCustomer(id)
 }
-

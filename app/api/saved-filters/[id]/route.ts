@@ -1,9 +1,10 @@
 import { savedFilters } from "@/features/saved-filters/data/saved-filters"
-import { UpdateSavedFilterInput, updateSavedFilterSchema } from "@/features/saved-filters/schemas/saved-filter-schema"
+import {
+  UpdateSavedFilterInput,
+  updateSavedFilterSchema,
+} from "@/features/saved-filters/schemas/saved-filter-schema"
 
-import type {
-  SavedFilter,
-} from "@/features/saved-filters/types/types"
+import type { SavedFilter } from "@/features/saved-filters/types/types"
 import { ApiResponse } from "@/types/types"
 
 type RouteContext = {
@@ -18,9 +19,7 @@ export async function DELETE(
 ): Promise<Response> {
   const { id } = await params
 
-  const index = savedFilters.findIndex(
-    (filter) => filter.id === id
-  )
+  const index = savedFilters.findIndex((filter) => filter.id === id)
 
   if (index === -1) {
     return Response.json(
@@ -50,16 +49,13 @@ export async function DELETE(
   return Response.json(response)
 }
 
-
 export async function PATCH(
   request: Request,
   { params }: RouteContext
 ): Promise<Response> {
   const { id } = await params
 
-  const savedFilter = savedFilters.find(
-    (filter) => filter.id === id
-  )
+  const savedFilter = savedFilters.find((filter) => filter.id === id)
 
   if (!savedFilter) {
     return Response.json(

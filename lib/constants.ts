@@ -1,8 +1,6 @@
 export const APP_NAME = "Greentiq"
 
-
-
-// table pagination and filter 
+// table pagination and filter
 export const TABLE_CONFIG = {
   DEFAULT_PAGE: 1,
   DEFAULT_PAGE_SIZE: 10,

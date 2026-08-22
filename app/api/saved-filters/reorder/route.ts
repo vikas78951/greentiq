@@ -1,14 +1,10 @@
-import {
-  reorderSavedFiltersSchema,
-} from "@/features/saved-filters/schemas/saved-filter-schema"
+import { reorderSavedFiltersSchema } from "@/features/saved-filters/schemas/saved-filter-schema"
 import { savedFilters } from "@/features/saved-filters/data/saved-filters"
 
 import type { SavedFilter } from "@/features/saved-filters/types/types"
 import type { ApiResponse } from "@/types/types"
 
-export async function PATCH(
-  request: Request
-): Promise<Response> {
+export async function PATCH(request: Request): Promise<Response> {
   const body: unknown = await request.json()
 
   const result = reorderSavedFiltersSchema.safeParse(body)
@@ -28,20 +24,17 @@ export async function PATCH(
 
   const items = result.data.items
 
-  
   if (items.length !== savedFilters.length) {
     return Response.json(
       {
         error: {
           code: "INVALID_REORDER",
-          message:
-            "All saved filters must be included when reordering",
+          message: "All saved filters must be included when reordering",
         },
       },
       { status: 400 }
     )
   }
-
 
   const receivedIds = new Set(items.map((item) => item.id))
 
@@ -57,14 +50,9 @@ export async function PATCH(
     )
   }
 
+  const existingIds = new Set(savedFilters.map((filter) => filter.id))
 
-  const existingIds = new Set(
-    savedFilters.map((filter) => filter.id)
-  )
-
-  const unknownItem = items.find(
-    (item) => !existingIds.has(item.id)
-  )
+  const unknownItem = items.find((item) => !existingIds.has(item.id))
 
   if (unknownItem) {
     return Response.json(
@@ -78,7 +66,6 @@ export async function PATCH(
     )
   }
 
- 
   const orders = items.map((item) => item.order)
 
   const expectedOrders = Array.from(
@@ -95,18 +82,14 @@ export async function PATCH(
       {
         error: {
           code: "INVALID_ORDER",
-          message:
-            "Orders must be unique and sequential starting from 0",
+          message: "Orders must be unique and sequential starting from 0",
         },
       },
       { status: 400 }
     )
   }
 
- 
-  const orderMap = new Map(
-    items.map((item) => [item.id, item.order])
-  )
+  const orderMap = new Map(items.map((item) => [item.id, item.order]))
 
   const now = new Date().toISOString()
 
@@ -119,10 +102,7 @@ export async function PATCH(
     }
   }
 
-
-  const data = [...savedFilters].sort(
-    (a, b) => a.order - b.order
-  )
+  const data = [...savedFilters].sort((a, b) => a.order - b.order)
 
   const response: ApiResponse<SavedFilter[]> = {
     data,

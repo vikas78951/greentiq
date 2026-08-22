@@ -4,16 +4,11 @@ import {
   type CreateSavedFilterInput,
 } from "@/features/saved-filters/schemas/saved-filter-schema"
 
-import type {
-  SavedFilter
-} from "@/features/saved-filters/types/types"
+import type { SavedFilter } from "@/features/saved-filters/types/types"
 import { ApiResponse } from "@/types/types"
 
-
 export function getSavedFilters(): Response {
-  const result = [...savedFilters].sort(
-    (a, b) => a.order - b.order
-  )
+  const result = [...savedFilters].sort((a, b) => a.order - b.order)
 
   const response: ApiResponse<SavedFilter[]> = {
     data: result,
@@ -22,9 +17,7 @@ export function getSavedFilters(): Response {
   return Response.json(response)
 }
 
-export async function createSavedFilter(
-  request: Request
-): Promise<Response> {
+export async function createSavedFilter(request: Request): Promise<Response> {
   const body: unknown = await request.json()
 
   const result = createSavedFilterSchema.safeParse(body)
@@ -41,7 +34,6 @@ export async function createSavedFilter(
       { status: 400 }
     )
   }
-
 
   const input: CreateSavedFilterInput = result.data
 

@@ -8,4 +8,3 @@ export interface SavedFilter {
   createdAt: string
   updatedAt: string
 }
-

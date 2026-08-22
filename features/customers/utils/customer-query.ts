@@ -1,14 +1,13 @@
-import { customerStatusSchema ,customerQuerySchema } from "../schemas/customer-schema"
+import {
+  customerStatusSchema,
+  customerQuerySchema,
+} from "../schemas/customer-schema"
 
 import { TABLE_CONFIG } from "@/lib/constants"
 
 import type { CustomerQuery } from "@/features/customers/types/types"
 
-
-const parseNumber = (
-  value: string | null,
-  fallback: number
-): number => {
+const parseNumber = (value: string | null, fallback: number): number => {
   if (!value) return fallback
 
   const parsed = Number(value)
@@ -16,20 +15,14 @@ const parseNumber = (
   return Number.isFinite(parsed) ? parsed : fallback
 }
 
-const parseStatuses = (
-  searchParams: URLSearchParams
-) => {
+const parseStatuses = (searchParams: URLSearchParams) => {
   return searchParams
     .getAll("status")
     .flatMap((value) => value.split(","))
-    .filter((value) =>
-      customerStatusSchema.safeParse(value).success
-    )
+    .filter((value) => customerStatusSchema.safeParse(value).success)
 }
 
-const parseCompanies = (
-  searchParams: URLSearchParams
-): string[] => {
+const parseCompanies = (searchParams: URLSearchParams): string[] => {
   return searchParams
     .getAll("company")
     .flatMap((value) => value.split(","))
@@ -57,30 +50,20 @@ export function parseCustomerQuery(
     : TABLE_CONFIG.DEFAULT_PAGE_SIZE
 
   const query = {
-    search:
-      searchParams.get("search")?.trim().toLowerCase() ||
-      undefined,
+    search: searchParams.get("search")?.trim().toLowerCase() || undefined,
 
     filters: {
       status: parseStatuses(searchParams),
       companies: parseCompanies(searchParams),
-      dateFrom:
-        searchParams.get("dateFrom") || undefined,
-      dateTo:
-        searchParams.get("dateTo") || undefined,
-      phone:
-        searchParams.get("phone")?.trim().toLowerCase() ||
-        undefined,
-      email:
-        searchParams.get("email")?.trim().toLowerCase() ||
-        undefined,
+      dateFrom: searchParams.get("dateFrom") || undefined,
+      dateTo: searchParams.get("dateTo") || undefined,
+      phone: searchParams.get("phone")?.trim().toLowerCase() || undefined,
+      email: searchParams.get("email")?.trim().toLowerCase() || undefined,
     },
 
-    sortBy:
-      searchParams.get("sortBy") || undefined,
+    sortBy: searchParams.get("sortBy") || undefined,
 
-    sortOrder:
-      searchParams.get("sortOrder") || undefined,
+    sortOrder: searchParams.get("sortOrder") || undefined,
 
     page: rawPage,
     pageSize,

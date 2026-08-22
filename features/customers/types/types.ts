@@ -1,7 +1,5 @@
-
-export type CustomerStatus = "active" | "inactive";
+export type CustomerStatus = "active" | "inactive"
 export type CustomerGender = "male" | "female"
-
 
 export interface Customer {
   id: string
@@ -18,14 +16,13 @@ export interface Customer {
   updatedAt: string
 }
 
-
 export interface CustomerQuery {
-  search?: string;
-  filters: FilterState;
-  sortBy?: "name" | "email" | "lastContactDate";
-  sortOrder?: "asc" | "desc";
-  page: number;
-  pageSize: 10 | 25 | 50;
+  search?: string
+  filters: FilterState
+  sortBy?: "name" | "email" | "lastContactDate"
+  sortOrder?: "asc" | "desc"
+  page: number
+  pageSize: 10 | 25 | 50
 }
 
 export interface FilterState {
@@ -36,4 +33,3 @@ export interface FilterState {
   phone?: string
   email?: string
 }
- 

@@ -4,11 +4,7 @@ export const customerStatusSchema = z.enum(["active", "inactive"])
 
 export const customerGenderSchema = z.enum(["male", "female"])
 
-export const sortBySchema = z.enum([
-  "name",
-  "email",
-  "lastContactDate",
-])
+export const sortBySchema = z.enum(["name", "email", "lastContactDate"])
 
 export const sortOrderSchema = z.enum(["asc", "desc"])
 
@@ -30,62 +26,33 @@ export const customerQuerySchema = z.object({
 
   page: z.number().int().positive(),
 
-  pageSize: z.union([
-    z.literal(10),
-    z.literal(25),
-    z.literal(50),
-  ]),
+  pageSize: z.union([z.literal(10), z.literal(25), z.literal(50)]),
 })
 
 const customerFieldsSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Name must be at least 2 characters"),
+  name: z.string().trim().min(2, "Name must be at least 2 characters"),
 
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .pipe(z.email("Invalid email address")),
+  email: z.string().trim().toLowerCase().pipe(z.email("Invalid email address")),
 
-  phone: z
-    .string()
-    .trim()
-    .min(7, "Invalid phone number"),
+  phone: z.string().trim().min(7, "Invalid phone number"),
 
-  company: z
-    .string()
-    .trim()
-    .min(2, "Company is required"),
+  company: z.string().trim().min(2, "Company is required"),
 
   status: customerStatusSchema,
 
   gender: customerGenderSchema,
 
-  avatar: z
-    .string()
-    .url("Invalid avatar URL").optional(),
+  avatar: z.string().url("Invalid avatar URL").optional(),
 
-  lastContactDate: z
-    .string()
-    .min(1, "Last contact date is required"),
+  lastContactDate: z.string().min(1, "Last contact date is required"),
 
-  notes: z
-    .string()
-    .trim()
-    .default(""),
+  notes: z.string().trim().default(""),
 })
 
 export const createCustomerSchema = customerFieldsSchema
 
-export const updateCustomerSchema =
-  customerFieldsSchema.partial()
+export const updateCustomerSchema = customerFieldsSchema.partial()
 
-export type CreateCustomerInput = z.infer<
-  typeof createCustomerSchema
->
+export type CreateCustomerInput = z.infer<typeof createCustomerSchema>
 
-export type UpdateCustomerInput = z.infer<
-  typeof updateCustomerSchema
->
+export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>
