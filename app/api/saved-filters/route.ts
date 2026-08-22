@@ -1,5 +1,8 @@
-import { savedFilters } from "@/lib/data"
+import {
+  createSavedFilter,
+  getSavedFilters,
+} from "@/features/saved-filters/services/saved-filter-service"
 
-export async function GET() {
-  return Response.json({ data: savedFilters })
-}
+export const GET = getSavedFilters
+
+export const POST = createSavedFilter
