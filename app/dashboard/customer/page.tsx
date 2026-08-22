@@ -21,6 +21,8 @@ export default function CustomerTest() {
     },
   })
 
+  const defualtMeta = { page: 1, pageSize: 10, total: 0, totalPages: 0 }
+
   if (query.isPending) {
     return <div>Loading...</div>
   }
@@ -38,7 +40,7 @@ export default function CustomerTest() {
       <DataTable
         columns={columns}
         data={query.data.data}
-        pagination={query.data.meta}
+        pagination={query.data.meta || defualtMeta}
         paginationState={pagination}
         onPaginationChange={setPagination}
       />

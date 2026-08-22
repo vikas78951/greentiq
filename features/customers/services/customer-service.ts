@@ -1,7 +1,10 @@
 import { customers } from "@/features/customers/data/customers"
 import { parseCustomerQuery } from "@/features/customers/utils/customer-query"
 
-import type { Customer } from "@/features/customers/types/types"
+import type {
+  Customer,
+  CustomersResponse,
+} from "@/features/customers/types/types"
 import { ApiResponse } from "@/types/types"
 import {
   CreateCustomerInput,
@@ -88,7 +91,7 @@ export function getCustomers(request: Request): Response {
   const start = (safePage - 1) * query.pageSize
   const end = start + query.pageSize
 
-  const response: ApiResponse<Customer[]> = {
+  const response: CustomersResponse = {
     data: result.slice(start, end),
     meta: {
       page: safePage,

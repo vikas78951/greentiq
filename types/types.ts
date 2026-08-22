@@ -4,5 +4,5 @@ export type ApiResponse<T, M = undefined> = {
     message: string
     code?: string
   }
-  meta: M
+  meta?: M
 }

@@ -1,17 +1,9 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
 
-import type { Customer, CustomerQuery } from "@/features/customers/types/types"
-
-import type { ApiResponse } from "@/types/types"
-
-export interface PaginationMeta {
-  page: number
-  pageSize: number
-  total: number
-  totalPages: number
-}
-
-type CustomersResponse = ApiResponse<Customer[], PaginationMeta>
+import type {
+  CustomerQuery,
+  CustomersResponse,
+} from "@/features/customers/types/types"
 
 const buildQueryString = (query: CustomerQuery) => {
   const params = new URLSearchParams()

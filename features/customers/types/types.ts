@@ -1,6 +1,6 @@
+import { ApiResponse } from "@/types/types"
 export type CustomerStatus = "active" | "inactive"
 export type CustomerGender = "male" | "female"
-
 export interface Customer {
   id: string
   name: string
@@ -33,3 +33,12 @@ export interface FilterState {
   phone?: string
   email?: string
 }
+
+export interface PaginationMeta {
+  page: number
+  pageSize: number
+  total: number
+  totalPages: number
+}
+
+export type CustomersResponse = ApiResponse<Customer[], PaginationMeta>

@@ -128,8 +128,8 @@ export function DataTable<TData extends RowData>({
                     {header.isPlaceholder
                       ? null
                       : table.FlexRender({
-                        header,
-                      })}
+                          header,
+                        })}
                   </TableHead>
                 ))}
               </TableRow>
@@ -174,9 +174,7 @@ export function DataTable<TData extends RowData>({
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              Rows per page
-            </span>
+            <span className="text-sm text-muted-foreground">Rows per page</span>
 
             <Select
               value={String(paginationState.pageSize)}
