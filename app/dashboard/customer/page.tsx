@@ -1,11 +1,20 @@
 "use client"
 
+import * as React from "react"
+
 import { useCustomers } from "@/features/customers/hooks/use-customers"
+import { columns } from "@/features/customers/components/columns"
+import { DataTable } from "@/features/customers/components/customer-table"
 
 export default function CustomerTest() {
-  const query = useCustomers({
-    page: 1,
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
     pageSize: 10,
+  })
+
+  const query = useCustomers({
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize as 10 | 25 | 50,
     filters: {
       status: [],
       companies: [],
@@ -20,5 +29,19 @@ export default function CustomerTest() {
     return <div>{query.error.message}</div>
   }
 
-  return <pre>{JSON.stringify(query.data, null, 2)}</pre>
+  if (!query.isSuccess) {
+    return null
+  }
+
+  return (
+    <section className="p-4">
+      <DataTable
+        columns={columns}
+        data={query.data.data}
+        pagination={query.data.meta}
+        paginationState={pagination}
+        onPaginationChange={setPagination}
+      />
+    </section>
+  )
 }

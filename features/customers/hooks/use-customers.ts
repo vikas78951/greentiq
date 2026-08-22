@@ -1,11 +1,17 @@
-"use client"
-
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, keepPreviousData } from "@tanstack/react-query"
 
 import type { Customer, CustomerQuery } from "@/features/customers/types/types"
+
 import type { ApiResponse } from "@/types/types"
 
-type CustomersResponse = ApiResponse<Customer[]>
+export interface PaginationMeta {
+  page: number
+  pageSize: number
+  total: number
+  totalPages: number
+}
+
+type CustomersResponse = ApiResponse<Customer[], PaginationMeta>
 
 const buildQueryString = (query: CustomerQuery) => {
   const params = new URLSearchParams()
@@ -68,5 +74,6 @@ export function useCustomers(query: CustomerQuery) {
   return useQuery({
     queryKey: ["customers", query],
     queryFn: () => fetchCustomers(query),
+    placeholderData: keepPreviousData,
   })
 }
