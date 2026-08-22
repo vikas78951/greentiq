@@ -2,15 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query"
 
-import type {
-  Customer,
-  CustomerQuery,
-} from "@/features/customers/types/types"
+import type { Customer, CustomerQuery } from "@/features/customers/types/types"
 import type { ApiResponse } from "@/types/types"
 
-
-type CustomersResponse = ApiResponse<Customer[]> 
-
+type CustomersResponse = ApiResponse<Customer[]>
 
 const buildQueryString = (query: CustomerQuery) => {
   const params = new URLSearchParams()
@@ -60,9 +55,7 @@ const buildQueryString = (query: CustomerQuery) => {
 async function fetchCustomers(
   query: CustomerQuery
 ): Promise<CustomersResponse> {
-  const response = await fetch(
-    `/api/customers?${buildQueryString(query)}`
-  )
+  const response = await fetch(`/api/customers?${buildQueryString(query)}`)
 
   if (!response.ok) {
     throw new Error("Failed to fetch customers")
@@ -70,7 +63,6 @@ async function fetchCustomers(
 
   return response.json()
 }
-
 
 export function useCustomers(query: CustomerQuery) {
   return useQuery({

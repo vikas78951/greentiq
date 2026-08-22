@@ -2,9 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import type {
-  Customer,
-} from "@/features/customers/types/types"
+import type { Customer } from "@/features/customers/types/types"
 import { CreateCustomerInput } from "../schemas/customer-schema"
 import type { ApiResponse } from "@/types/types"
 

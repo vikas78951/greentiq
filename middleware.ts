@@ -4,10 +4,7 @@ import type { NextRequest } from "next/server"
 export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers)
 
-  requestHeaders.set(
-    "x-pathname",
-    request.nextUrl.pathname
-  )
+  requestHeaders.set("x-pathname", request.nextUrl.pathname)
 
   return NextResponse.next({
     request: {
@@ -17,7 +14,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-  ],
+  matcher: ["/dashboard/:path*"],
 }

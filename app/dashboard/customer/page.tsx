@@ -20,9 +20,5 @@ export default function CustomerTest() {
     return <div>{query.error.message}</div>
   }
 
-  return (
-    <pre>
-      {JSON.stringify(query.data, null, 2)}
-    </pre>
-  )
+  return <pre>{JSON.stringify(query.data, null, 2)}</pre>
 }

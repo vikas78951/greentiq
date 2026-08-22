@@ -45,9 +45,7 @@ export default function NavMenu({ data }: NavMenuProps) {
     <>
       {data.navMain.map((group) => (
         <SidebarGroup key={group.title}>
-          <SidebarGroupLabel>
-            {group.title}
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
 
           <SidebarGroupContent>
             <SidebarMenu>
@@ -62,12 +60,11 @@ export default function NavMenu({ data }: NavMenuProps) {
 
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                       
-                      isActive={isActive}
-                      
-                    >
-                      <Link href={item.url} className="flex gap-2 items-center w-full">
+                    <SidebarMenuButton isActive={isActive}>
+                      <Link
+                        href={item.url}
+                        className="flex w-full items-center gap-2"
+                      >
                         <Icon />
                         <span>{item.title}</span>
                       </Link>

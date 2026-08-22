@@ -7,8 +7,6 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-
-
   return (
     <main className="min-h-svh">
       <SidebarProvider>

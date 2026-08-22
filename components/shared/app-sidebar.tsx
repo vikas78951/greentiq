@@ -37,7 +37,6 @@ const data: SidebarData = {
           title: "Dashboard",
           url: "/dashboard",
           icon: "dashboard",
-
         },
         {
           title: "Customers",
