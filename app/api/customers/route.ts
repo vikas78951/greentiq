@@ -1,5 +1,10 @@
-import { customers } from "@/lib/data"
-
-export async function GET() {
-  return Response.json({ data: customers })
+import {
+    getCustomers,
+    createCustomer
 }
+    from '@/features/customers/services/customer-service'
+
+
+
+export const GET = getCustomers
+export const POST = createCustomer
