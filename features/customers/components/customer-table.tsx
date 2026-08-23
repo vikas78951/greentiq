@@ -9,6 +9,7 @@ import {
   type SortingState,
   type ColumnVisibilityState,
   type PaginationState,
+  type RowSelectionState,
 } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
@@ -46,7 +47,15 @@ interface DataTableProps<TData extends RowData> {
 
   paginationState: PaginationState
 
-  onPaginationChange: React.Dispatch<React.SetStateAction<PaginationState>>
+  onPaginationChange: React.Dispatch<
+    React.SetStateAction<PaginationState>
+  >
+
+  rowSelection: RowSelectionState
+
+  onRowSelectionChange: React.Dispatch<
+    React.SetStateAction<RowSelectionState>
+  >
 }
 
 export function DataTable<TData extends RowData>({
@@ -55,18 +64,25 @@ export function DataTable<TData extends RowData>({
   pagination,
   paginationState,
   onPaginationChange,
+  rowSelection,
+  onRowSelectionChange,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const [columnVisibility, setColumnVisibility] =
     React.useState<ColumnVisibilityState>({})
 
-  const [rowSelection, setRowSelection] = React.useState({})
-
   const table = useTable({
     features,
     data,
     columns,
+
+    /*
+     * IMPORTANT:
+     * Selection must use the customer's database ID,
+     * not the table row index.
+     */
+    getRowId: (row) => String((row as { id: string }).id),
 
     state: {
       sorting,
@@ -75,17 +91,19 @@ export function DataTable<TData extends RowData>({
       pagination: paginationState,
     },
 
+    enableRowSelection: true,
+
     onSortingChange: setSorting,
 
     onColumnVisibilityChange: setColumnVisibility,
 
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange,
 
     onPaginationChange,
 
     manualPagination: true,
 
-    pageCount: pagination?.totalPages,
+    pageCount: pagination?.totalPages ?? 0,
 
     manualSorting: true,
   })
@@ -102,7 +120,9 @@ export function DataTable<TData extends RowData>({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={cn(header.column.columnDef.meta?.className)}
+                    className={cn(
+                      header.column.columnDef.meta?.className
+                    )}
                   >
                     {header.isPlaceholder
                       ? null
@@ -120,12 +140,18 @@ export function DataTable<TData extends RowData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() ? "selected" : undefined}
+                  data-state={
+                    row.getIsSelected()
+                      ? "selected"
+                      : undefined
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className={cn(cell.column.columnDef.meta?.className)}
+                      className={cn(
+                        cell.column.columnDef.meta?.className
+                      )}
                     >
                       {table.FlexRender({
                         cell,
@@ -151,14 +177,10 @@ export function DataTable<TData extends RowData>({
       {/* PAGINATION */}
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        {/* RESULT COUNT */}
-
         <div className="text-sm text-muted-foreground">
           {pagination?.total ?? 0} customer
           {(pagination?.total ?? 0) !== 1 ? "s" : ""}
         </div>
-
-        {/* PAGINATION CONTROLS */}
 
         <div className="flex flex-wrap items-center gap-3">
           {/* PAGE SIZE */}
@@ -185,9 +207,7 @@ export function DataTable<TData extends RowData>({
 
               <SelectContent>
                 <SelectItem value="10">10</SelectItem>
-
                 <SelectItem value="25">25</SelectItem>
-
                 <SelectItem value="50">50</SelectItem>
               </SelectContent>
             </Select>
@@ -196,7 +216,8 @@ export function DataTable<TData extends RowData>({
           {/* PAGE */}
 
           <span className="text-sm whitespace-nowrap">
-            Page {pagination?.page ?? 1} of {pagination?.totalPages ?? 1}
+            Page {pagination?.page ?? 1} of{" "}
+            {pagination?.totalPages ?? 1}
           </span>
 
           {/* PREVIOUS / NEXT */}

@@ -41,15 +41,9 @@ export function createColumns({
 
       header: ({ table }) => (
         <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected()
-              ? true
-              : table.getIsSomePageRowsSelected()
-                ? undefined
-                : false
-          }
+          checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value)
+            table.toggleAllPageRowsSelected(value === true)
           }}
           aria-label="Select all customers"
         />

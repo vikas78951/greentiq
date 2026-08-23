@@ -2,7 +2,6 @@
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -14,9 +13,11 @@ import {
 import { Loader2, Trash2 } from "lucide-react"
 
 import type { Customer } from "@/features/customers/types/types"
+import { Button } from "@/components/ui/button"
 
 type CustomerDeleteDialogProps = {
   customer: Customer | null
+  count?: number
   open: boolean
   isPending?: boolean
   onOpenChange: (open: boolean) => void
@@ -25,38 +26,58 @@ type CustomerDeleteDialogProps = {
 
 export function CustomerDeleteDialog({
   customer,
+  count = 1,
   open,
   isPending = false,
   onOpenChange,
   onConfirm,
 }: CustomerDeleteDialogProps) {
-  if (!customer) {
-    return null
-  }
+  const isBulk = count > 1
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="sm:max-w-[425px]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete customer?</AlertDialogTitle>
+          <div className="flex gap-4 items-center">
+            {/* ICON */}
+            <div className="mb-2 flex size-10 items-center justify-center rounded-full bg-destructive/10">
+              <Trash2 className="size-5 text-destructive" />
+            </div>
 
-          <AlertDialogDescription>
-            Are you sure you want to delete{" "}
-            <span className="font-medium text-foreground">{customer.name}</span>
-            ? This action cannot be undone.
+            {/* TITLE */}
+            <AlertDialogTitle>
+              {isBulk
+                ? `Delete ${count} customers?`
+                : "Delete customer?"}
+            </AlertDialogTitle>
+
+
+          </div>
+          {/* DESCRIPTION */}
+          <AlertDialogDescription className="w-full">
+            You are about to permanently delete{" "}
+            {isBulk ? (
+              <span className="font-medium text-foreground">
+                {count} customers
+              </span>
+            ) : (
+              <span className="font-medium text-foreground">
+                {customer?.name}
+              </span>
+            )}
+            . This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            Cancel
+          </AlertDialogCancel>
 
-          <AlertDialogAction
-            variant="destructive"
+          <Button
+          variant='destructive'
             disabled={isPending}
-            onClick={(event) => {
-              event.preventDefault()
-              onConfirm()
-            }}
+            onClick={onConfirm}
           >
             {isPending ? (
               <>
@@ -66,10 +87,13 @@ export function CustomerDeleteDialog({
             ) : (
               <>
                 <Trash2 />
-                Delete Customer
+                {isBulk
+                  ? `Delete ${count} customers`
+                  : "Delete customer"}
               </>
             )}
-          </AlertDialogAction>
+          </Button>
+
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
