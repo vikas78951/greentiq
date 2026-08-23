@@ -25,6 +25,7 @@ import { features } from "./table-features"
 const columnHelper = createColumnHelper<typeof features, Customer>()
 
 export const columns = columnHelper.columns([
+  // SELECT
   columnHelper.display({
     id: "select",
 
@@ -56,8 +57,13 @@ export const columns = columnHelper.columns([
 
     enableSorting: false,
     enableHiding: false,
+
+    meta: {
+      className: "hidden sm:table-cell",
+    },
   }),
 
+  // CUSTOMER
   columnHelper.display({
     id: "customer",
 
@@ -75,8 +81,8 @@ export const columns = columnHelper.columns([
         .toUpperCase()
 
       return (
-        <div className="flex items-center gap-3">
-          <Avatar>
+        <div className="flex min-w-0 items-center gap-3">
+          <Avatar className="size-8 shrink-0">
             {customer.avatar && (
               <AvatarImage src={customer.avatar} alt={customer.name} />
             )}
@@ -96,14 +102,21 @@ export const columns = columnHelper.columns([
     },
   }),
 
+  // PHONE
   columnHelper.accessor("phone", {
     header: "Phone",
+
+    meta: {
+      className: "hidden sm:table-cell",
+    },
   }),
 
+  // COMPANY
   columnHelper.accessor("company", {
     header: "Company",
   }),
 
+  // STATUS
   columnHelper.accessor("status", {
     header: "Status",
 
@@ -118,10 +131,16 @@ export const columns = columnHelper.columns([
     },
   }),
 
+  // LAST CONTACT
   columnHelper.accessor("lastContactDate", {
     header: "Last Contact",
+
+    meta: {
+      className: "hidden sm:table-cell",
+    },
   }),
 
+  // ACTIONS
   columnHelper.display({
     id: "actions",
 

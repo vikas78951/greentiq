@@ -12,13 +12,7 @@ import {
 } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 
 import {
   Select,
@@ -73,58 +67,43 @@ export function DataTable<TData extends RowData>({
     features,
     data,
     columns,
+
     state: {
       sorting,
       columnVisibility,
       rowSelection,
       pagination: paginationState,
     },
+
     onSortingChange: setSorting,
+
     onColumnVisibilityChange: setColumnVisibility,
+
     onRowSelectionChange: setRowSelection,
+
     onPaginationChange,
+
     manualPagination: true,
+
     pageCount: pagination?.totalPages,
+
     manualSorting: true,
   })
 
   return (
     <div className="space-y-4">
-      {/* <div className="flex items-center justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={<Button variant="outline">Columns</Button>}
-          >
-            Columns
-          </DropdownMenuTrigger>
+      {/* TABLE */}
 
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => {
-                    column.toggleVisibility(!!value)
-                  }}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div> */}
-
-      <div className="overflow-hidden rounded-md border">
-        <Table>
+      <div className="overflow-x-auto rounded-md border">
+        <Table className="min-w-[640px]">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(header.column.columnDef.meta?.className)}
+                  >
                     {header.isPlaceholder
                       ? null
                       : table.FlexRender({
@@ -144,7 +123,10 @@ export function DataTable<TData extends RowData>({
                   data-state={row.getIsSelected() ? "selected" : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn(cell.column.columnDef.meta?.className)}
+                    >
                       {table.FlexRender({
                         cell,
                       })}
@@ -166,15 +148,25 @@ export function DataTable<TData extends RowData>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
+      {/* PAGINATION */}
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        {/* RESULT COUNT */}
+
         <div className="text-sm text-muted-foreground">
-          {pagination?.total} customer
-          {pagination?.total !== 1 ? "s" : ""}
+          {pagination?.total ?? 0} customer
+          {(pagination?.total ?? 0) !== 1 ? "s" : ""}
         </div>
 
-        <div className="flex items-center gap-4">
+        {/* PAGINATION CONTROLS */}
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* PAGE SIZE */}
+
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Rows per page</span>
+            <span className="hidden text-sm text-muted-foreground sm:inline">
+              Rows per page
+            </span>
 
             <Select
               value={String(paginationState.pageSize)}
@@ -187,21 +179,27 @@ export function DataTable<TData extends RowData>({
                 })
               }}
             >
-              <SelectTrigger className="w-[80px]">
+              <SelectTrigger className="w-20">
                 <SelectValue />
               </SelectTrigger>
 
               <SelectContent>
                 <SelectItem value="10">10</SelectItem>
+
                 <SelectItem value="25">25</SelectItem>
+
                 <SelectItem value="50">50</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <span className="text-sm">
-            Page {pagination?.page} of {pagination?.totalPages}
+          {/* PAGE */}
+
+          <span className="text-sm whitespace-nowrap">
+            Page {pagination?.page ?? 1} of {pagination?.totalPages ?? 1}
           </span>
+
+          {/* PREVIOUS / NEXT */}
 
           <div className="flex items-center gap-2">
             <Button

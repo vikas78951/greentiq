@@ -1,6 +1,13 @@
+import "@tanstack/react-table"
+import type {
+  CellData,
+  RowData,
+  TableFeatures,
+} from "@tanstack/react-table"
 import { ApiResponse } from "@/types/types"
 export type CustomerStatus = "active" | "inactive"
 export type CustomerGender = "male" | "female"
+
 export interface Customer {
   id: string
   name: string
@@ -42,3 +49,15 @@ export interface PaginationMeta {
 }
 
 export type CustomersResponse = ApiResponse<Customer[], PaginationMeta>
+
+
+
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
+    className?: string
+  }
+}

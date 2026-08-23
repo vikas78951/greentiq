@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Plus } from "lucide-react"
+import { Search, Plus, X } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -27,7 +27,7 @@ type CustomerFiltersProps = {
   onCompanyChange: (company: string | undefined) => void
   onAddCustomer: () => void
 }
-type StatusSelectValue = CustomerStatus | "all"
+
 export function CustomerFilters({
   search,
   filters,
@@ -49,8 +49,21 @@ export function CustomerFilters({
             onSearchChange(event.target.value)
           }}
           placeholder="Search name, email or company..."
-          className="pl-9"
+          className="pr-9 pl-9"
         />
+
+        {search && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute top-1 right-1 size-7"
+            onClick={() => onSearchChange("")}
+            aria-label="Clear search"
+          >
+            <X className="size-4" />
+          </Button>
+        )}
       </div>
 
       {/* Status */}
@@ -61,19 +74,16 @@ export function CustomerFilters({
             onStatusChange(value)
           } else {
             onStatusChange(undefined)
-            return
           }
         }}
       >
-        <SelectTrigger className="w-45">
+        <SelectTrigger className="w-20 md:w-45">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
 
         <SelectContent>
           <SelectItem value="all">All Status</SelectItem>
-
           <SelectItem value="active">Active</SelectItem>
-
           <SelectItem value="inactive">Inactive</SelectItem>
         </SelectContent>
       </Select>
@@ -82,15 +92,14 @@ export function CustomerFilters({
       <Select
         value={filters.companies[0] ?? "all"}
         onValueChange={(value) => {
-          if (value === null || value === "all") {
+          if (!value || value === "all") {
             onCompanyChange(undefined)
-            return
+          } else {
+            onCompanyChange(value)
           }
-
-          onCompanyChange(value)
         }}
       >
-        <SelectTrigger className="w-45">
+        <SelectTrigger className="w-20 md:w-45">
           <SelectValue placeholder="Company" />
         </SelectTrigger>
 
@@ -107,7 +116,7 @@ export function CustomerFilters({
 
       <Button onClick={onAddCustomer}>
         <Plus />
-        Add Customer
+        <span className="hidden sm:block">Add Customer</span>
       </Button>
     </div>
   )

@@ -3,6 +3,8 @@
 import * as React from "react"
 
 import { useCustomers } from "@/features/customers/hooks/use-customers"
+import { useDebounce } from "@/hooks/use-debounce"
+
 import { companies } from "@/features/customers/data/customers"
 import { columns } from "@/features/customers/components/columns"
 import { DataTable } from "@/features/customers/components/customer-table"
@@ -19,7 +21,12 @@ export default function CustomerTest() {
     pageSize: 10,
   })
 
-  const [search, setSearch] = React.useState("")
+  // Immediate value shown in input
+  const [searchInput, setSearchInput] = React.useState("")
+
+  // Value actually sent to API
+  const search = useDebounce(searchInput, 500)
+
   const [filters, setFilters] = React.useState<FilterState>({
     status: [],
     companies: [],
@@ -36,8 +43,7 @@ export default function CustomerTest() {
   })
 
   const handleSearchChange = (value: string) => {
-    setSearch(value)
-
+    setSearchInput(value)
     setPagination((previous) => ({
       ...previous,
       pageIndex: 0,
@@ -83,7 +89,7 @@ export default function CustomerTest() {
   return (
     <section className="space-y-4 p-4">
       <CustomerFilters
-        search={search}
+        search={searchInput}
         filters={filters}
         companies={companies}
         onSearchChange={handleSearchChange}
