@@ -4,30 +4,46 @@ export const customerStatusSchema = z.enum(["active", "inactive"])
 
 export const customerGenderSchema = z.enum(["male", "female"])
 
+const dateSchema = z.iso.date("Invalid date")
+
 export const sortBySchema = z.enum(["name", "email", "lastContactDate"])
 
 export const sortOrderSchema = z.enum(["asc", "desc"])
 
-export const customerQuerySchema = z.object({
-  search: z.string().trim().toLowerCase().optional(),
+export const customerQuerySchema = z
+  .object({
+    search: z.string().trim().toLowerCase().optional(),
 
-  filters: z.object({
-    status: z.array(customerStatusSchema).default([]),
-    companies: z.array(z.string().trim()).default([]),
-    dateFrom: z.string().optional(),
-    dateTo: z.string().optional(),
-    phone: z.string().trim().toLowerCase().optional(),
-    email: z.string().trim().toLowerCase().optional(),
-  }),
+    filters: z.object({
+      status: z.array(customerStatusSchema).default([]),
+      companies: z.array(z.string().trim()).default([]),
+      dateFrom: dateSchema.optional(),
+      dateTo: dateSchema.optional(),
+      phone: z.string().trim().toLowerCase().optional(),
+      email: z.string().trim().toLowerCase().optional(),
+    }),
 
-  sortBy: sortBySchema.optional(),
+    sortBy: sortBySchema.optional(),
 
-  sortOrder: sortOrderSchema.optional(),
+    sortOrder: sortOrderSchema.optional(),
 
-  page: z.number().int().positive(),
+    page: z.number().int().positive(),
 
-  pageSize: z.union([z.literal(10), z.literal(25), z.literal(50)]),
-})
+    pageSize: z.union([z.literal(10), z.literal(25), z.literal(50)]),
+  })
+  .superRefine((query, context) => {
+    if (
+      query.filters.dateFrom &&
+      query.filters.dateTo &&
+      query.filters.dateFrom > query.filters.dateTo
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["filters", "dateTo"],
+        message: "End date must be on or after the start date",
+      })
+    }
+  })
 
 const customerFieldsSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters"),
@@ -44,7 +60,7 @@ const customerFieldsSchema = z.object({
 
   avatar: z.string().url("Invalid avatar URL").optional(),
 
-  lastContactDate: z.string().min(1, "Last contact date is required"),
+  lastContactDate: dateSchema,
 
   notes: z.string().trim().default(""),
 })

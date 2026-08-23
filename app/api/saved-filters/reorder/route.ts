@@ -3,11 +3,16 @@ import { savedFilters } from "@/features/saved-filters/data/saved-filters"
 
 import type { SavedFilter } from "@/features/saved-filters/types/types"
 import type { ApiResponse } from "@/types/types"
+import { readJsonBody } from "@/lib/request"
 
 export async function PATCH(request: Request): Promise<Response> {
-  const body: unknown = await request.json()
+  const bodyResult = await readJsonBody(request)
 
-  const result = reorderSavedFiltersSchema.safeParse(body)
+  if (!bodyResult.success) {
+    return bodyResult.response
+  }
+
+  const result = reorderSavedFiltersSchema.safeParse(bodyResult.data)
 
   if (!result.success) {
     return Response.json(
