@@ -2,9 +2,13 @@
 
 import * as React from "react"
 
+import { DragDropProvider } from "@dnd-kit/react"
+import { isSortable, useSortable } from "@dnd-kit/react/sortable"
+
 import {
   useTable,
   type ColumnDef,
+  type Row,
   type RowData,
   type SortingState,
   type ColumnVisibilityState,
@@ -52,6 +56,33 @@ interface DataTableProps<TData extends RowData> {
   rowSelection: RowSelectionState
 
   onRowSelectionChange: React.Dispatch<React.SetStateAction<RowSelectionState>>
+
+  onReorder?: (activeId: string, overId: string) => void
+}
+
+type SortableTableRowProps<TData extends RowData> = {
+  row: Row<typeof features, TData>
+  renderCells: () => React.ReactNode
+}
+
+function SortableTableRow<TData extends RowData>({
+  row,
+  renderCells,
+}: SortableTableRowProps<TData>) {
+  const { ref, isDragging } = useSortable({
+    id: row.id,
+    index: row.index,
+  })
+
+  return (
+    <TableRow
+      ref={ref}
+      data-state={row.getIsSelected() ? "selected" : undefined}
+      className={cn("cursor-grab", isDragging && "opacity-50")}
+    >
+      {renderCells()}
+    </TableRow>
+  )
 }
 
 export function DataTable<TData extends RowData>({
@@ -62,6 +93,7 @@ export function DataTable<TData extends RowData>({
   onPaginationChange,
   rowSelection,
   onRowSelectionChange,
+  onReorder,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
@@ -73,11 +105,6 @@ export function DataTable<TData extends RowData>({
     data,
     columns,
 
-    /*
-     * IMPORTANT:
-     * Selection must use the customer's database ID,
-     * not the table row index.
-     */
     getRowId: (row) => String((row as { id: string }).id),
 
     state: {
@@ -106,8 +133,6 @@ export function DataTable<TData extends RowData>({
 
   return (
     <div className="space-y-4">
-      {/* TABLE */}
-
       <div className="overflow-x-auto rounded-md border">
         <Table className="min-w-[640px]">
           <TableHeader>
@@ -129,40 +154,67 @@ export function DataTable<TData extends RowData>({
             ))}
           </TableHeader>
 
-          <TableBody>
-            {table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() ? "selected" : undefined}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(cell.column.columnDef.meta?.className)}
-                    >
-                      {table.FlexRender({
-                        cell,
-                      })}
-                    </TableCell>
-                  ))}
+          <DragDropProvider
+            onDragEnd={(event) => {
+              if (event.canceled || !onReorder) {
+                return
+              }
+
+              const { source, target } = event.operation
+
+              if (!source || !target) {
+                return
+              }
+
+              if (!isSortable(source) || !isSortable(target)) {
+                return
+              }
+
+              const activeId = String(source.id)
+
+              const overId = String(target.id)
+
+              if (activeId === overId) {
+                return
+              }
+
+              onReorder(activeId, overId)
+            }}
+          >
+            <TableBody>
+              {table.getRowModel().rows.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <SortableTableRow
+                    key={row.id}
+                    row={row}
+                    renderCells={() =>
+                      row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(cell.column.columnDef.meta?.className)}
+                        >
+                          {table.FlexRender({
+                            cell,
+                          })}
+                        </TableCell>
+                      ))
+                    }
+                  />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No customers found.
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No customers found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+              )}
+            </TableBody>
+          </DragDropProvider>
         </Table>
       </div>
-
-      {/* PAGINATION */}
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-sm text-muted-foreground">
@@ -171,8 +223,6 @@ export function DataTable<TData extends RowData>({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* PAGE SIZE */}
-
           <div className="flex items-center gap-2">
             <span className="hidden text-sm text-muted-foreground sm:inline">
               Rows per page
@@ -181,11 +231,9 @@ export function DataTable<TData extends RowData>({
             <Select
               value={String(paginationState.pageSize)}
               onValueChange={(value) => {
-                const pageSize = Number(value)
-
                 onPaginationChange({
                   pageIndex: 0,
-                  pageSize,
+                  pageSize: Number(value),
                 })
               }}
             >
@@ -195,19 +243,17 @@ export function DataTable<TData extends RowData>({
 
               <SelectContent>
                 <SelectItem value="10">10</SelectItem>
+
                 <SelectItem value="25">25</SelectItem>
+
                 <SelectItem value="50">50</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* PAGE */}
-
           <span className="text-sm whitespace-nowrap">
             Page {pagination?.page ?? 1} of {pagination?.totalPages ?? 1}
           </span>
-
-          {/* PREVIOUS / NEXT */}
 
           <div className="flex items-center gap-2">
             <Button

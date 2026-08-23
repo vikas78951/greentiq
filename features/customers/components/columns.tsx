@@ -1,7 +1,7 @@
 "use client"
 
 import { createColumnHelper } from "@tanstack/react-table"
-import { Eye, Pencil, Trash2 } from "lucide-react"
+import { Eye, GripVertical, Pencil, Trash2 } from "lucide-react"
 import type { Customer } from "@/features/customers/types/types"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,14 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 import { features } from "./table-features"
 
@@ -35,6 +27,17 @@ export function createColumns({
   onDelete,
 }: CustomerColumnActions) {
   return columnHelper.columns([
+    columnHelper.display({
+      id: "drag",
+
+      header: "",
+
+      cell: ({ row }) => <GripVertical className="size-4 opacity-20" />,
+
+      enableSorting: false,
+      enableHiding: false,
+    }),
+
     // SELECT
     columnHelper.display({
       id: "select",

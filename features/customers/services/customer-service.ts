@@ -81,6 +81,8 @@ export function getCustomers(request: Request): Response {
 
       return String(aValue).localeCompare(String(bValue)) * direction
     })
+  } else {
+    result.sort((a, b) => (a.order || 0) - (b.order || 0))
   }
 
   const total = result.length
