@@ -19,10 +19,7 @@ import type {
 } from "@/features/customers/types/types"
 
 import { Button } from "@/components/ui/button"
-import {
-  Drawer,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
+import { Drawer, DrawerTrigger } from "@/components/ui/drawer"
 
 const emptyFilters: FilterState = {
   status: [],
@@ -54,15 +51,13 @@ export default function CustomerPage() {
   const search = useDebounce(searchInput, 500)
 
   // Filters actually applied to the customer query.
-  const [filters, setFilters] =
-    React.useState<FilterState>(emptyFilters)
+  const [filters, setFilters] = React.useState<FilterState>(emptyFilters)
 
   // Filters currently being edited inside the drawer.
   const [draftFilters, setDraftFilters] =
     React.useState<FilterState>(emptyFilters)
 
-  const [filterDrawerOpen, setFilterDrawerOpen] =
-    React.useState(false)
+  const [filterDrawerOpen, setFilterDrawerOpen] = React.useState(false)
 
   const query = useCustomers({
     search: search || undefined,
@@ -83,9 +78,7 @@ export default function CustomerPage() {
     resetPage()
   }
 
-  const handleStatusChange = (
-    status: CustomerStatus | undefined
-  ) => {
+  const handleStatusChange = (status: CustomerStatus | undefined) => {
     setFilters((previous) => ({
       ...previous,
       status: status ? [status] : [],
@@ -94,9 +87,7 @@ export default function CustomerPage() {
     resetPage()
   }
 
-  const handleCompanyChange = (
-    company: string | undefined
-  ) => {
+  const handleCompanyChange = (company: string | undefined) => {
     setFilters((previous) => ({
       ...previous,
       companies: company ? [company] : [],
@@ -152,9 +143,7 @@ export default function CustomerPage() {
   /*
    * Applying a saved filter immediately applies it.
    */
-  const handleApplySavedFilter = (
-    nextFilters: FilterState
-  ) => {
+  const handleApplySavedFilter = (nextFilters: FilterState) => {
     const next = cloneFilters(nextFilters)
 
     setFilters(next)
@@ -232,10 +221,7 @@ export default function CustomerPage() {
         >
           <DrawerTrigger
             render={
-              <Button
-                variant="outline"
-                onClick={handleFilterDrawerOpen}
-              >
+              <Button variant="outline" onClick={handleFilterDrawerOpen}>
                 <SlidersHorizontal />
                 Advanced Filters
               </Button>
@@ -253,10 +239,7 @@ export default function CustomerPage() {
         </Drawer>
 
         {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            onClick={handleClearFilters}
-          >
+          <Button variant="ghost" onClick={handleClearFilters}>
             <X />
             Clear all
           </Button>

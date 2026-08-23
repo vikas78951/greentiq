@@ -50,9 +50,7 @@ import type {
 type AdvanceFilterDrawerProps = {
   filters: FilterState
   companies: string[]
-  onFiltersChange: React.Dispatch<
-    React.SetStateAction<FilterState>
-  >
+  onFiltersChange: React.Dispatch<React.SetStateAction<FilterState>>
   onApply: (filters: FilterState) => void
   onClear: () => void
   onApplySavedFilter: (filters: FilterState) => void
@@ -98,62 +96,45 @@ export function AdvanceFilterDrawer({
   onClear,
   onApplySavedFilter,
 }: AdvanceFilterDrawerProps) {
-  const [saveDialogOpen, setSaveDialogOpen] =
-    React.useState(false)
+  const [saveDialogOpen, setSaveDialogOpen] = React.useState(false)
 
-  const [saveName, setSaveName] =
-    React.useState("")
+  const [saveName, setSaveName] = React.useState("")
 
-  const [replaceDialogOpen, setReplaceDialogOpen] =
-    React.useState(false)
+  const [replaceDialogOpen, setReplaceDialogOpen] = React.useState(false)
 
-  const [existingFilter, setExistingFilter] =
-    React.useState<{
-      id: string
-      name: string
-      filters: FilterState
-    } | null>(null)
+  const [existingFilter, setExistingFilter] = React.useState<{
+    id: string
+    name: string
+    filters: FilterState
+  } | null>(null)
 
-  const { data: savedFilters = [], isLoading } =
-    useSavedFilters()
+  const { data: savedFilters = [], isLoading } = useSavedFilters()
 
-  const createSavedFilter =
-    useCreateSavedFilter()
+  const createSavedFilter = useCreateSavedFilter()
 
-  const updateSavedFilter =
-    useUpdateSavedFilter()
+  const updateSavedFilter = useUpdateSavedFilter()
 
   const filterCount = getFilterCount(filters)
 
-  const handleStatusChange = (
-    status: CustomerStatus,
-    checked: boolean
-  ) => {
+  const handleStatusChange = (status: CustomerStatus, checked: boolean) => {
     onFiltersChange((previous) => ({
       ...previous,
       status: checked
         ? previous.status.includes(status)
           ? previous.status
           : [...previous.status, status]
-        : previous.status.filter(
-            (item) => item !== status
-          ),
+        : previous.status.filter((item) => item !== status),
     }))
   }
 
-  const handleCompanyChange = (
-    company: string,
-    checked: boolean
-  ) => {
+  const handleCompanyChange = (company: string, checked: boolean) => {
     onFiltersChange((previous) => ({
       ...previous,
       companies: checked
         ? previous.companies.includes(company)
           ? previous.companies
           : [...previous.companies, company]
-        : previous.companies.filter(
-            (item) => item !== company
-          ),
+        : previous.companies.filter((item) => item !== company),
     }))
   }
 
@@ -165,9 +146,7 @@ export function AdvanceFilterDrawer({
     }
 
     const existing = savedFilters.find(
-      (filter) =>
-        filter.name.trim().toLowerCase() ===
-        name.toLowerCase()
+      (filter) => filter.name.trim().toLowerCase() === name.toLowerCase()
     )
 
     if (existing) {
@@ -223,16 +202,11 @@ export function AdvanceFilterDrawer({
     <>
       <DrawerContent className="h-screen w-full sm:max-w-lg">
         <DrawerHeader className="relative w-full border-b">
-          <DrawerTitle className="text-2xl">
-            Advanced Filters
-          </DrawerTitle>
+          <DrawerTitle className="text-2xl">Advanced Filters</DrawerTitle>
 
           <DrawerClose
             render={
-              <Button
-                variant="ghost"
-                className="absolute top-2 right-2"
-              >
+              <Button variant="ghost" className="absolute top-2 right-2">
                 <X />
               </Button>
             }
@@ -246,30 +220,21 @@ export function AdvanceFilterDrawer({
               <Label>Status</Label>
 
               <div className="flex items-center gap-4">
-                {(["active", "inactive"] as const).map(
-                  (status) => (
-                    <label
-                      key={status}
-                      className="flex cursor-pointer items-center gap-2"
-                    >
-                      <Checkbox
-                        checked={filters.status.includes(
-                          status
-                        )}
-                        onCheckedChange={(checked) => {
-                          handleStatusChange(
-                            status,
-                            checked === true
-                          )
-                        }}
-                      />
+                {(["active", "inactive"] as const).map((status) => (
+                  <label
+                    key={status}
+                    className="flex cursor-pointer items-center gap-2"
+                  >
+                    <Checkbox
+                      checked={filters.status.includes(status)}
+                      onCheckedChange={(checked) => {
+                        handleStatusChange(status, checked === true)
+                      }}
+                    />
 
-                      <span className="text-sm capitalize">
-                        {status}
-                      </span>
-                    </label>
-                  )
-                )}
+                    <span className="text-sm capitalize">{status}</span>
+                  </label>
+                ))}
               </div>
             </section>
 
@@ -284,20 +249,13 @@ export function AdvanceFilterDrawer({
                     className="flex cursor-pointer items-center gap-2"
                   >
                     <Checkbox
-                      checked={filters.companies.includes(
-                        company
-                      )}
+                      checked={filters.companies.includes(company)}
                       onCheckedChange={(checked) => {
-                        handleCompanyChange(
-                          company,
-                          checked === true
-                        )
+                        handleCompanyChange(company, checked === true)
                       }}
                     />
 
-                    <span className="text-sm">
-                      {company}
-                    </span>
+                    <span className="text-sm">{company}</span>
                   </label>
                 ))}
               </div>
@@ -309,9 +267,7 @@ export function AdvanceFilterDrawer({
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">
-                    From
-                  </Label>
+                  <Label className="text-xs text-muted-foreground">From</Label>
 
                   <Input
                     type="date"
@@ -319,18 +275,14 @@ export function AdvanceFilterDrawer({
                     onChange={(event) =>
                       onFiltersChange((previous) => ({
                         ...previous,
-                        dateFrom:
-                          event.target.value ||
-                          undefined,
+                        dateFrom: event.target.value || undefined,
                       }))
                     }
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">
-                    To
-                  </Label>
+                  <Label className="text-xs text-muted-foreground">To</Label>
 
                   <Input
                     type="date"
@@ -338,9 +290,7 @@ export function AdvanceFilterDrawer({
                     onChange={(event) =>
                       onFiltersChange((previous) => ({
                         ...previous,
-                        dateTo:
-                          event.target.value ||
-                          undefined,
+                        dateTo: event.target.value || undefined,
                       }))
                     }
                   />
@@ -351,9 +301,7 @@ export function AdvanceFilterDrawer({
             {/* PHONE / EMAIL */}
             <section className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <Label htmlFor="filter-phone">
-                  Phone
-                </Label>
+                <Label htmlFor="filter-phone">Phone</Label>
 
                 <Input
                   id="filter-phone"
@@ -362,18 +310,14 @@ export function AdvanceFilterDrawer({
                   onChange={(event) =>
                     onFiltersChange((previous) => ({
                       ...previous,
-                      phone:
-                        event.target.value ||
-                        undefined,
+                      phone: event.target.value || undefined,
                     }))
                   }
                 />
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="filter-email">
-                  Email
-                </Label>
+                <Label htmlFor="filter-email">Email</Label>
 
                 <Input
                   id="filter-email"
@@ -382,9 +326,7 @@ export function AdvanceFilterDrawer({
                   onChange={(event) =>
                     onFiltersChange((previous) => ({
                       ...previous,
-                      email:
-                        event.target.value ||
-                        undefined,
+                      email: event.target.value || undefined,
                     }))
                   }
                 />
@@ -397,9 +339,7 @@ export function AdvanceFilterDrawer({
                 variant="outline"
                 className="flex-1"
                 onClick={() => {
-                  onFiltersChange(
-                    cloneFilters(emptyFilters)
-                  )
+                  onFiltersChange(cloneFilters(emptyFilters))
                   onClear()
                 }}
               >
@@ -407,10 +347,7 @@ export function AdvanceFilterDrawer({
                 Clear
               </Button>
 
-              <Button
-                className="flex-1"
-                onClick={() => onApply(filters)}
-              >
+              <Button className="flex-1" onClick={() => onApply(filters)}>
                 Apply Filters
               </Button>
 
@@ -431,9 +368,7 @@ export function AdvanceFilterDrawer({
             {/* SAVED FILTERS */}
             <section className="space-y-3 border-t pt-5">
               <div>
-                <h3 className="text-sm font-medium">
-                  Saved Filters
-                </h3>
+                <h3 className="text-sm font-medium">Saved Filters</h3>
 
                 <p className="text-xs text-muted-foreground">
                   Apply a previously saved filter.
@@ -461,21 +396,14 @@ export function AdvanceFilterDrawer({
                         </div>
 
                         <div className="text-xs text-muted-foreground">
-                          {getFilterCount(
-                            savedFilter.filters
-                          )}{" "}
-                          filters
+                          {getFilterCount(savedFilter.filters)} filters
                         </div>
                       </div>
 
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          onApplySavedFilter(
-                            savedFilter.filters
-                          )
-                        }
+                        onClick={() => onApplySavedFilter(savedFilter.filters)}
                       >
                         Apply
                       </Button>
@@ -498,31 +426,24 @@ export function AdvanceFilterDrawer({
       </DrawerContent>
 
       {/* SAVE FILTER */}
-      <Dialog
-        open={saveDialogOpen}
-        onOpenChange={setSaveDialogOpen}
-      >
+      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Save Filter</DialogTitle>
 
             <DialogDescription>
-              Give this filter combination a name so you can
-              quickly apply it later.
+              Give this filter combination a name so you can quickly apply it
+              later.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2">
-            <Label htmlFor="save-filter-name">
-              Filter name
-            </Label>
+            <Label htmlFor="save-filter-name">Filter name</Label>
 
             <Input
               id="save-filter-name"
               value={saveName}
-              onChange={(event) =>
-                setSaveName(event.target.value)
-              }
+              onChange={(event) => setSaveName(event.target.value)}
               placeholder="e.g. Active Customers"
               maxLength={50}
               autoFocus
@@ -530,12 +451,7 @@ export function AdvanceFilterDrawer({
           </div>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() =>
-                setSaveDialogOpen(false)
-              }
-            >
+            <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
               Cancel
             </Button>
 
@@ -547,39 +463,30 @@ export function AdvanceFilterDrawer({
                 filterCount === 0
               }
             >
-              {createSavedFilter.isPending
-                ? "Saving..."
-                : "Save Filter"}
+              {createSavedFilter.isPending ? "Saving..." : "Save Filter"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* REPLACE EXISTING */}
-      <AlertDialog
-        open={replaceDialogOpen}
-        onOpenChange={setReplaceDialogOpen}
-      >
+      <AlertDialog open={replaceDialogOpen} onOpenChange={setReplaceDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Replace existing filter?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Replace existing filter?</AlertDialogTitle>
 
             <AlertDialogDescription>
               A filter named{" "}
               <span className="font-medium text-foreground">
                 &quot;{existingFilter?.name}&quot;
               </span>{" "}
-              already exists. Replacing it will overwrite
-              its current filter configuration.
+              already exists. Replacing it will overwrite its current filter
+              configuration.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel
-              disabled={updateSavedFilter.isPending}
-            >
+            <AlertDialogCancel disabled={updateSavedFilter.isPending}>
               Cancel
             </AlertDialogCancel>
 
@@ -587,9 +494,7 @@ export function AdvanceFilterDrawer({
               onClick={handleReplaceFilter}
               disabled={updateSavedFilter.isPending}
             >
-              {updateSavedFilter.isPending
-                ? "Replacing..."
-                : "Replace"}
+              {updateSavedFilter.isPending ? "Replacing..." : "Replace"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
