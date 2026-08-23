@@ -6,6 +6,7 @@ import {
 
 import type { SavedFilter } from "@/features/saved-filters/types/types"
 import { ApiResponse } from "@/types/types"
+import { readJsonBody } from "@/lib/request"
 
 type RouteContext = {
   params: Promise<{
@@ -69,9 +70,13 @@ export async function PATCH(
     )
   }
 
-  const body: unknown = await request.json()
+  const bodyResult = await readJsonBody(request)
 
-  const result = updateSavedFilterSchema.safeParse(body)
+  if (!bodyResult.success) {
+    return bodyResult.response
+  }
+
+  const result = updateSavedFilterSchema.safeParse(bodyResult.data)
 
   if (!result.success) {
     return Response.json(

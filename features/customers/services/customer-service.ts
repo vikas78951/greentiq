@@ -14,11 +14,40 @@ import {
   updateCustomerSchema,
   type UpdateCustomerInput,
 } from "@/features/customers/schemas/customer-schema"
+import { readJsonBody } from "@/lib/request"
+import { z } from "zod"
 
 export function getCustomers(request: Request): Response {
   const { searchParams } = new URL(request.url)
 
-  const query = parseCustomerQuery(searchParams)
+  let query
+
+  try {
+    query = parseCustomerQuery(searchParams)
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return Response.json(
+        {
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Invalid customer query",
+            details: error.issues,
+          },
+        },
+        { status: 400 }
+      )
+    }
+
+    return Response.json(
+      {
+        error: {
+          code: "INVALID_REQUEST",
+          message: "Unable to process customer query",
+        },
+      },
+      { status: 400 }
+    )
+  }
 
   let result = [...customers]
 
@@ -107,9 +136,13 @@ export function getCustomers(request: Request): Response {
 }
 
 export async function createCustomer(request: Request): Promise<Response> {
-  const body: unknown = await request.json()
+  const bodyResult = await readJsonBody(request)
 
-  const result = createCustomerSchema.safeParse(body)
+  if (!bodyResult.success) {
+    return bodyResult.response
+  }
+
+  const result = createCustomerSchema.safeParse(bodyResult.data)
 
   if (!result.success) {
     return Response.json(
@@ -184,9 +217,13 @@ export async function updateCustomer(
     )
   }
 
-  const body: unknown = await request.json()
+  const bodyResult = await readJsonBody(request)
 
-  const result = updateCustomerSchema.safeParse(body)
+  if (!bodyResult.success) {
+    return bodyResult.response
+  }
+
+  const result = updateCustomerSchema.safeParse(bodyResult.data)
 
   if (!result.success) {
     return Response.json(

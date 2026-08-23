@@ -6,6 +6,7 @@ import {
 
 import type { SavedFilter } from "@/features/saved-filters/types/types"
 import { ApiResponse } from "@/types/types"
+import { readJsonBody } from "@/lib/request"
 
 export function getSavedFilters(): Response {
   const result = [...savedFilters].sort((a, b) => a.order - b.order)
@@ -18,9 +19,13 @@ export function getSavedFilters(): Response {
 }
 
 export async function createSavedFilter(request: Request): Promise<Response> {
-  const body: unknown = await request.json()
+  const bodyResult = await readJsonBody(request)
 
-  const result = createSavedFilterSchema.safeParse(body)
+  if (!bodyResult.success) {
+    return bodyResult.response
+  }
+
+  const result = createSavedFilterSchema.safeParse(bodyResult.data)
 
   if (!result.success) {
     return Response.json(

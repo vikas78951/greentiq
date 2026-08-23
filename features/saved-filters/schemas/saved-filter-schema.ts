@@ -1,13 +1,29 @@
 import { z } from "zod"
 
-export const savedFilterFiltersSchema = z.object({
-  status: z.array(z.enum(["active", "inactive"])).default([]),
-  companies: z.array(z.string().trim()).default([]),
-  dateFrom: z.string().optional(),
-  dateTo: z.string().optional(),
-  phone: z.string().trim().optional(),
-  email: z.string().trim().optional(),
-})
+const dateSchema = z.iso.date("Invalid date")
+
+export const savedFilterFiltersSchema = z
+  .object({
+    status: z.array(z.enum(["active", "inactive"])).default([]),
+    companies: z.array(z.string().trim()).default([]),
+    dateFrom: dateSchema.optional(),
+    dateTo: dateSchema.optional(),
+    phone: z.string().trim().optional(),
+    email: z.string().trim().optional(),
+  })
+  .superRefine((filters, context) => {
+    if (
+      filters.dateFrom &&
+      filters.dateTo &&
+      filters.dateFrom > filters.dateTo
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["dateTo"],
+        message: "End date must be on or after the start date",
+      })
+    }
+  })
 
 export const createSavedFilterSchema = z.object({
   name: z

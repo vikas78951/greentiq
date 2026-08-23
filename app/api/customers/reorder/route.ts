@@ -1,38 +1,47 @@
 import { customers } from "@/features/customers/data/customers"
+import { readJsonBody } from "@/lib/request"
+import { z } from "zod"
 
-type ReorderCustomerInput = {
-  activeId: string
-  overId: string
-}
+const reorderCustomerSchema = z.object({
+  activeId: z.string().trim().min(1),
+  overId: z.string().trim().min(1),
+})
 
 export async function PATCH(request: Request): Promise<Response> {
-  const body = (await request.json()) as Partial<ReorderCustomerInput>
+  const bodyResult = await readJsonBody(request)
 
-  if (!body.activeId || !body.overId) {
+  if (!bodyResult.success) {
+    return bodyResult.response
+  }
+
+  const result = reorderCustomerSchema.safeParse(bodyResult.data)
+
+  if (!result.success) {
     return Response.json(
       {
         error: {
-          code: "INVALID_REORDER",
-          message: "activeId and overId are required",
+          code: "VALIDATION_ERROR",
+          message: "Invalid reorder data",
+          details: result.error.issues,
         },
       },
       { status: 400 }
     )
   }
 
-  if (body.activeId === body.overId) {
+  const { activeId, overId } = result.data
+
+  if (activeId === overId) {
     return Response.json({
       data: customers,
     })
   }
 
   const activeIndex = customers.findIndex(
-    (customer) => customer.id === body.activeId
+    (customer) => customer.id === activeId
   )
 
-  const overIndex = customers.findIndex(
-    (customer) => customer.id === body.overId
-  )
+  const overIndex = customers.findIndex((customer) => customer.id === overId)
 
   if (activeIndex === -1 || overIndex === -1) {
     return Response.json(
