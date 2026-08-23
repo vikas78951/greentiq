@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import type { Customer } from "@/features/customers/types/types"
 import type { ApiResponse } from "@/types/types"
-import { UpdateCustomerInput } from "../schemas/customer-schema"
+import type { UpdateCustomerInput } from "../schemas/customer-schema"
 
 type UpdateCustomerPayload = {
   id: string
@@ -23,11 +23,13 @@ async function updateCustomer({
     body: JSON.stringify(data),
   })
 
+  const result = await response.json()
+
   if (!response.ok) {
-    throw new Error("Failed to update customer")
+    throw new Error(result?.error?.message ?? "Failed to update customer")
   }
 
-  return response.json()
+  return result
 }
 
 export function useUpdateCustomer() {
@@ -36,14 +38,15 @@ export function useUpdateCustomer() {
   return useMutation({
     mutationFn: updateCustomer,
 
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: ["customers"],
-      })
-
-      queryClient.invalidateQueries({
-        queryKey: ["customers", variables.id],
-      })
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["customers"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["customers", variables.id],
+        }),
+      ])
     },
   })
 }
