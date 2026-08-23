@@ -1,6 +1,4 @@
 import * as React from "react"
-import type { LucideIcon } from "lucide-react"
-import { LayoutDashboard, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -12,10 +10,12 @@ import {
 import { Logo } from "./logo"
 import NavMenu from "./nav-menu"
 
+type IconName = "dashboard" | "customers"
+
 type NavItem = {
   title: string
   url: string
-  icon: LucideIcon
+  icon: IconName
   isActive?: boolean
 }
 
@@ -36,13 +36,12 @@ const data: SidebarData = {
         {
           title: "Dashboard",
           url: "/dashboard",
-          icon: LayoutDashboard,
-          isActive: true,
+          icon: "dashboard",
         },
         {
           title: "Customers",
           url: "/dashboard/customer",
-          icon: Users,
+          icon: "customers",
         },
       ],
     },

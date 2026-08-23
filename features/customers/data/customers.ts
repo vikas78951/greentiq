@@ -17,7 +17,7 @@ const names = [
   "Sneha Rao",
 ]
 
-const companies = [
+export const companies = [
   "TechNova Solutions",
   "CloudPeak Systems",
   "FinEdge Technologies",

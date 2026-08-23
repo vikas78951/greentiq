@@ -42,7 +42,7 @@ export async function DELETE(
       filter.order = index
     })
 
-  const response: ApiResponse<SavedFilter> = {
+  const response: ApiResponse<SavedFilter, null> = {
     data: deletedFilter,
   }
 
