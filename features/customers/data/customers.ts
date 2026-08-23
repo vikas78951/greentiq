@@ -48,6 +48,7 @@ export const customers: Customer[] = Array.from({ length: 50 }, (_, index) => {
 
   return {
     id: `cus_${String(id).padStart(3, "0")}`,
+    order: index,
     name: `${name} ${id > 10 ? id : ""}`.trim(),
     gender,
     avatar: getAvatar(gender, id),

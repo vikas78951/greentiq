@@ -61,7 +61,6 @@ export function CustomerForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* NAME + EMAIL */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <Label>Name</Label>
@@ -93,7 +92,6 @@ export function CustomerForm({
         </div>
       </div>
 
-      {/* PHONE + COMPANY */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <Label>Phone</Label>
@@ -124,7 +122,6 @@ export function CustomerForm({
         </div>
       </div>
 
-      {/* LAST CONTACT + AVATAR */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <Label>Last Contact Date</Label>
@@ -158,7 +155,6 @@ export function CustomerForm({
         </div>
       </div>
 
-      {/* STATUS + GENDER */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <Label>Status</Label>
@@ -187,7 +183,6 @@ export function CustomerForm({
         </div>
       </div>
 
-      {/* NOTES */}
       <div className="space-y-3">
         <Label>Notes</Label>
 
@@ -206,7 +201,6 @@ export function CustomerForm({
         )}
       </div>
 
-      {/* ACTION */}
       {readOnly ? (
         <Button
           type="button"

@@ -1,7 +1,7 @@
 "use client"
 
 import { createColumnHelper } from "@tanstack/react-table"
-import { Eye, Pencil, Trash2 } from "lucide-react"
+import { Eye, GripVertical, Pencil, Trash2 } from "lucide-react"
 import type { Customer } from "@/features/customers/types/types"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -9,15 +9,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 import { features } from "./table-features"
 
@@ -35,21 +26,25 @@ export function createColumns({
   onDelete,
 }: CustomerColumnActions) {
   return columnHelper.columns([
-    // SELECT
+    columnHelper.display({
+      id: "drag",
+
+      header: "",
+
+      cell: ({ row }) => <GripVertical className="size-4 opacity-20" />,
+
+      enableSorting: false,
+      enableHiding: false,
+    }),
+
     columnHelper.display({
       id: "select",
 
       header: ({ table }) => (
         <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected()
-              ? true
-              : table.getIsSomePageRowsSelected()
-                ? undefined
-                : false
-          }
+          checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value)
+            table.toggleAllPageRowsSelected(value === true)
           }}
           aria-label="Select all customers"
         />
@@ -73,7 +68,6 @@ export function createColumns({
       },
     }),
 
-    // CUSTOMER
     columnHelper.display({
       id: "customer",
 
@@ -112,7 +106,6 @@ export function createColumns({
       },
     }),
 
-    // PHONE
     columnHelper.accessor("phone", {
       header: "Phone",
 
@@ -121,12 +114,10 @@ export function createColumns({
       },
     }),
 
-    // COMPANY
     columnHelper.accessor("company", {
       header: "Company",
     }),
 
-    // STATUS
     columnHelper.accessor("status", {
       header: "Status",
 
@@ -141,7 +132,6 @@ export function createColumns({
       },
     }),
 
-    // LAST CONTACT
     columnHelper.accessor("lastContactDate", {
       header: "Last Contact",
 
@@ -150,7 +140,6 @@ export function createColumns({
       },
     }),
 
-    // ACTIONS
     columnHelper.display({
       id: "actions",
 

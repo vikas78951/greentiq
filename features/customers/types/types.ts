@@ -15,6 +15,7 @@ export interface Customer {
   avatar?: string
   lastContactDate: string
   notes: string
+  order?: number
   createdAt: string
   updatedAt: string
 }

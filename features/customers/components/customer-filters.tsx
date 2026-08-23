@@ -39,7 +39,6 @@ export function CustomerFilters({
 }: CustomerFiltersProps) {
   return (
     <div className="flex items-center gap-2">
-      {/* Search */}
       <div className="relative flex-1">
         <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
 
@@ -66,7 +65,6 @@ export function CustomerFilters({
         )}
       </div>
 
-      {/* Status */}
       <Select
         value={filters.status[0] ?? "all"}
         onValueChange={(value) => {
@@ -88,7 +86,6 @@ export function CustomerFilters({
         </SelectContent>
       </Select>
 
-      {/* Company */}
       <Select
         value={filters.companies[0] ?? "all"}
         onValueChange={(value) => {
