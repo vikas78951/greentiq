@@ -128,8 +128,8 @@ export function DataTable<TData extends RowData>({
                     {header.isPlaceholder
                       ? null
                       : table.FlexRender({
-                        header,
-                      })}
+                          header,
+                        })}
                   </TableHead>
                 ))}
               </TableRow>

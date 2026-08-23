@@ -41,7 +41,7 @@ export function CustomerFilters({
     <div className="flex items-center gap-2">
       {/* Search */}
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
 
         <Input
           value={search}
@@ -59,7 +59,7 @@ export function CustomerFilters({
         onValueChange={(value) => {
           if (value === "active" || value === "inactive") {
             onStatusChange(value)
-          }else{
+          } else {
             onStatusChange(undefined)
             return
           }
@@ -70,17 +70,11 @@ export function CustomerFilters({
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value="all">
-            All Status
-          </SelectItem>
+          <SelectItem value="all">All Status</SelectItem>
 
-          <SelectItem value="active">
-            Active
-          </SelectItem>
+          <SelectItem value="active">Active</SelectItem>
 
-          <SelectItem value="inactive">
-            Inactive
-          </SelectItem>
+          <SelectItem value="inactive">Inactive</SelectItem>
         </SelectContent>
       </Select>
 
@@ -101,15 +95,10 @@ export function CustomerFilters({
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value="all">
-            All Companies
-          </SelectItem>
+          <SelectItem value="all">All Companies</SelectItem>
 
           {companies.map((company) => (
-            <SelectItem
-              key={company}
-              value={company}
-            >
+            <SelectItem key={company} value={company}>
               {company}
             </SelectItem>
           ))}

@@ -30,15 +30,12 @@ export default function CustomerTest() {
 
     page: pagination.pageIndex + 1,
 
-    pageSize:
-      pagination.pageSize as 10 | 25 | 50,
+    pageSize: pagination.pageSize as 10 | 25 | 50,
 
     filters,
   })
 
-  const handleSearchChange = (
-    value: string
-  ) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
 
     setPagination((previous) => ({
@@ -47,9 +44,7 @@ export default function CustomerTest() {
     }))
   }
 
-  const handleStatusChange = (
-    status: CustomerStatus | undefined
-  ) => {
+  const handleStatusChange = (status: CustomerStatus | undefined) => {
     setFilters((previous) => ({
       ...previous,
       status: status ? [status] : [],
@@ -61,9 +56,7 @@ export default function CustomerTest() {
     }))
   }
 
-  const handleCompanyChange = (
-    company: string | undefined
-  ) => {
+  const handleCompanyChange = (company: string | undefined) => {
     setFilters((previous) => ({
       ...previous,
       companies: company ? [company] : [],
