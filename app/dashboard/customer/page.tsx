@@ -26,17 +26,15 @@ import { Drawer, DrawerTrigger } from "@/components/ui/drawer"
 import { Download, Trash2 } from "lucide-react"
 import type { RowSelectionState } from "@tanstack/react-table"
 
-const CustomerDialog = dynamic(
-  () =>
-    import("@/features/customers/components/customer-dialog").then(
-      (module) => module.CustomerDialog
-    )
+const CustomerDialog = dynamic(() =>
+  import("@/features/customers/components/customer-dialog").then(
+    (module) => module.CustomerDialog
+  )
 )
-const CustomerDeleteDialog = dynamic(
-  () =>
-    import("@/features/customers/components/customer-delete-dialog").then(
-      (module) => module.CustomerDeleteDialog
-    )
+const CustomerDeleteDialog = dynamic(() =>
+  import("@/features/customers/components/customer-delete-dialog").then(
+    (module) => module.CustomerDeleteDialog
+  )
 )
 
 const emptyFilters: FilterState = {
@@ -84,8 +82,9 @@ export default function CustomerPage() {
 
   const [customerDialogOpen, setCustomerDialogOpen] = React.useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
-  const [customersToDelete, setCustomersToDelete] =
-    React.useState<Customer[]>([])
+  const [customersToDelete, setCustomersToDelete] = React.useState<Customer[]>(
+    []
+  )
 
   const deleteCustomer = useDeleteCustomer()
 
@@ -179,36 +178,28 @@ export default function CustomerPage() {
     setDeleteDialogOpen(true)
   }, [])
 
- const handleConfirmDelete = React.useCallback(async () => {
-  if (customersToDelete.length === 0) {
-    return
-  }
+  const handleConfirmDelete = React.useCallback(async () => {
+    if (customersToDelete.length === 0) {
+      return
+    }
 
-  const customers = [...customersToDelete]
-  const count = customers.length
+    const customers = [...customersToDelete]
+    const count = customers.length
 
-  try {
-    await Promise.all(
-      customers.map((customer) =>
-        deleteCustomer.mutateAsync(customer.id)
+    try {
+      await Promise.all(
+        customers.map((customer) => deleteCustomer.mutateAsync(customer.id))
       )
-    )
 
-    setDeleteDialogOpen(false)
-    setCustomersToDelete([])
-    setRowSelection({})
+      setDeleteDialogOpen(false)
+      setCustomersToDelete([])
+      setRowSelection({})
 
-    toast.success(
-      `${count} customer${count > 1 ? "s" : ""} deleted`
-    )
-  } catch (error) {
-    toast.error(
-      error instanceof Error
-        ? error.message
-        : "Delete failed"
-    )
-  }
-}, [customersToDelete, deleteCustomer])
+      toast.success(`${count} customer${count > 1 ? "s" : ""} deleted`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Delete failed")
+    }
+  }, [customersToDelete, deleteCustomer])
 
   const columns = React.useMemo(
     () =>
@@ -221,11 +212,10 @@ export default function CustomerPage() {
   )
 
   const selectedCustomers = React.useMemo(() => {
-    return query.data?.data.filter(
-      (customer) => rowSelection[customer.id]
-    ) ?? []
+    return (
+      query.data?.data.filter((customer) => rowSelection[customer.id]) ?? []
+    )
   }, [query.data?.data, rowSelection])
-
 
   const handleExportSelected = React.useCallback(() => {
     if (selectedCustomers?.length === 0) {
@@ -277,9 +267,7 @@ export default function CustomerPage() {
 
     const link = document.createElement("a")
     link.href = url
-    link.download = `customers-${new Date()
-      .toISOString()
-      .slice(0, 10)}.csv`
+    link.download = `customers-${new Date().toISOString().slice(0, 10)}.csv`
 
     document.body.appendChild(link)
     link.click()
@@ -288,7 +276,8 @@ export default function CustomerPage() {
     URL.revokeObjectURL(url)
 
     toast.success(
-      `${selectedCustomers?.length} customer${selectedCustomers?.length > 1 ? "s" : ""
+      `${selectedCustomers?.length} customer${
+        selectedCustomers?.length > 1 ? "s" : ""
       } exported`
     )
   }, [selectedCustomers])
@@ -376,20 +365,12 @@ export default function CustomerPage() {
               {Object.keys(rowSelection).length} selected
             </span>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExportSelected}
-            >
+            <Button variant="outline" size="sm" onClick={handleExportSelected}>
               <Download />
               Export CSV
             </Button>
 
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleBulkDelete}
-            >
+            <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
               <Trash2 />
               Delete selected
             </Button>
@@ -464,11 +445,7 @@ export default function CustomerPage() {
       />
 
       <CustomerDeleteDialog
-        customer={
-          customersToDelete.length === 1
-            ? customersToDelete[0]
-            : null
-        }
+        customer={customersToDelete.length === 1 ? customersToDelete[0] : null}
         count={customersToDelete.length}
         open={deleteDialogOpen}
         isPending={deleteCustomer.isPending}

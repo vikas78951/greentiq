@@ -38,7 +38,7 @@ export function CustomerDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="sm:max-w-[425px]">
         <AlertDialogHeader>
-          <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-4">
             {/* ICON */}
             <div className="mb-2 flex size-10 items-center justify-center rounded-full bg-destructive/10">
               <Trash2 className="size-5 text-destructive" />
@@ -46,12 +46,8 @@ export function CustomerDeleteDialog({
 
             {/* TITLE */}
             <AlertDialogTitle>
-              {isBulk
-                ? `Delete ${count} customers?`
-                : "Delete customer?"}
+              {isBulk ? `Delete ${count} customers?` : "Delete customer?"}
             </AlertDialogTitle>
-
-
           </div>
           {/* DESCRIPTION */}
           <AlertDialogDescription className="w-full">
@@ -70,12 +66,10 @@ export function CustomerDeleteDialog({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
 
           <Button
-          variant='destructive'
+            variant="destructive"
             disabled={isPending}
             onClick={onConfirm}
           >
@@ -87,13 +81,10 @@ export function CustomerDeleteDialog({
             ) : (
               <>
                 <Trash2 />
-                {isBulk
-                  ? `Delete ${count} customers`
-                  : "Delete customer"}
+                {isBulk ? `Delete ${count} customers` : "Delete customer"}
               </>
             )}
           </Button>
-
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

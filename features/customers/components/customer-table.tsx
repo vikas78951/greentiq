@@ -47,15 +47,11 @@ interface DataTableProps<TData extends RowData> {
 
   paginationState: PaginationState
 
-  onPaginationChange: React.Dispatch<
-    React.SetStateAction<PaginationState>
-  >
+  onPaginationChange: React.Dispatch<React.SetStateAction<PaginationState>>
 
   rowSelection: RowSelectionState
 
-  onRowSelectionChange: React.Dispatch<
-    React.SetStateAction<RowSelectionState>
-  >
+  onRowSelectionChange: React.Dispatch<React.SetStateAction<RowSelectionState>>
 }
 
 export function DataTable<TData extends RowData>({
@@ -120,9 +116,7 @@ export function DataTable<TData extends RowData>({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={cn(
-                      header.column.columnDef.meta?.className
-                    )}
+                    className={cn(header.column.columnDef.meta?.className)}
                   >
                     {header.isPlaceholder
                       ? null
@@ -140,18 +134,12 @@ export function DataTable<TData extends RowData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={
-                    row.getIsSelected()
-                      ? "selected"
-                      : undefined
-                  }
+                  data-state={row.getIsSelected() ? "selected" : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className={cn(
-                        cell.column.columnDef.meta?.className
-                      )}
+                      className={cn(cell.column.columnDef.meta?.className)}
                     >
                       {table.FlexRender({
                         cell,
@@ -216,8 +204,7 @@ export function DataTable<TData extends RowData>({
           {/* PAGE */}
 
           <span className="text-sm whitespace-nowrap">
-            Page {pagination?.page ?? 1} of{" "}
-            {pagination?.totalPages ?? 1}
+            Page {pagination?.page ?? 1} of {pagination?.totalPages ?? 1}
           </span>
 
           {/* PREVIOUS / NEXT */}
