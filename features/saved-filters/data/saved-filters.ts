@@ -23,15 +23,4 @@ export const savedFilters: SavedFilter[] = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-  {
-    id: crypto.randomUUID(),
-    name: "Recent Contacts",
-    filters: {
-      status: [],
-      companies: [],
-    },
-    order: 2,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
 ]
