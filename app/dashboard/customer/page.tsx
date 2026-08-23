@@ -357,59 +357,73 @@ export default function CustomerPage() {
 
   return (
     <section className="space-y-4 p-4">
-      {/* Advanced filters */}
-      <div className="flex justify-end gap-2">
-        {Object.keys(rowSelection).length > 0 && (
-          <div className="flex items-center justify-end gap-2">
-            <span className="mr-2 text-sm text-muted-foreground">
-              {Object.keys(rowSelection).length} selected
-            </span>
+      <div className="flex flex-col justify-between md:flex-row md:items-center">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Customer</h1>
 
-            <Button variant="outline" size="sm" onClick={handleExportSelected}>
-              <Download />
-              Export CSV
-            </Button>
+          <p className="text-sm text-muted-foreground">Manage you customer.</p>
+        </div>
 
-            <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
-              <Trash2 />
-              Delete selected
-            </Button>
-          </div>
-        )}
-        <Drawer
-          open={filterDrawerOpen}
-          onOpenChange={setFilterDrawerOpen}
-          swipeDirection="right"
-          showSwipeHandle
-        >
-          <DrawerTrigger
-            render={
-              <Button variant="outline" onClick={handleFilterDrawerOpen}>
-                <SlidersHorizontal />
-                Advanced Filters
+        <div className="flex justify-end gap-2">
+          {Object.keys(rowSelection).length > 0 && (
+            <div className="flex items-center justify-end gap-2">
+              <span className="mr-2 text-sm text-muted-foreground">
+                {Object.keys(rowSelection).length} selected
+              </span>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportSelected}
+              >
+                <Download />
+                Export CSV
               </Button>
-            }
-          />
 
-          <AdvanceFilterDrawer
-            filters={draftFilters}
-            companies={companies}
-            onFiltersChange={handleDraftFiltersChange}
-            onApply={handleApplyFilters}
-            onClear={handleClearFilters}
-            onApplySavedFilter={handleApplySavedFilter}
-          />
-        </Drawer>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleBulkDelete}
+              >
+                <Trash2 />
+                Delete selected
+              </Button>
+            </div>
+          )}
+          <Drawer
+            open={filterDrawerOpen}
+            onOpenChange={setFilterDrawerOpen}
+            swipeDirection="right"
+            showSwipeHandle
+          >
+            <DrawerTrigger
+              render={
+                <Button variant="outline" onClick={handleFilterDrawerOpen}>
+                  <SlidersHorizontal />
+                  Advanced Filters
+                </Button>
+              }
+            />
 
-        {hasActiveFilters && (
-          <Button variant="ghost" onClick={handleClearFilters}>
-            <X />
-            Clear all
-          </Button>
-        )}
+            <AdvanceFilterDrawer
+              filters={draftFilters}
+              companies={companies}
+              onFiltersChange={handleDraftFiltersChange}
+              onApply={handleApplyFilters}
+              onClear={handleClearFilters}
+              onApplySavedFilter={handleApplySavedFilter}
+            />
+          </Drawer>
+
+          {hasActiveFilters && (
+            <Button variant="ghost" onClick={handleClearFilters}>
+              <X />
+              Clear all
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* Basic filters */}
       <CustomerFilters
         search={searchInput}
         filters={filters}
@@ -419,7 +433,6 @@ export default function CustomerPage() {
         onCompanyChange={handleCompanyChange}
         onAddCustomer={handleAddCustomer}
       />
-      {/* Table */}
       <DataTable
         columns={columns}
         data={query.data.data}

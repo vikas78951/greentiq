@@ -215,7 +215,6 @@ export function AdvanceFilterDrawer({
 
         <div className="mt-4 flex-1 overflow-y-auto px-2">
           <div className="space-y-6">
-            {/* STATUS */}
             <section className="space-y-3">
               <Label>Status</Label>
 
@@ -238,7 +237,6 @@ export function AdvanceFilterDrawer({
               </div>
             </section>
 
-            {/* COMPANY */}
             <section className="space-y-3">
               <Label>Company</Label>
 
@@ -261,7 +259,6 @@ export function AdvanceFilterDrawer({
               </div>
             </section>
 
-            {/* DATE RANGE */}
             <section className="space-y-3">
               <Label>Last Contacted</Label>
 
@@ -298,7 +295,6 @@ export function AdvanceFilterDrawer({
               </div>
             </section>
 
-            {/* PHONE / EMAIL */}
             <section className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
                 <Label htmlFor="filter-phone">Phone</Label>
@@ -333,7 +329,6 @@ export function AdvanceFilterDrawer({
               </div>
             </section>
 
-            {/* ACTIONS */}
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -365,7 +360,6 @@ export function AdvanceFilterDrawer({
               </Button>
             </div>
 
-            {/* SAVED FILTERS */}
             <section className="space-y-3 border-t pt-5">
               <div>
                 <h3 className="text-sm font-medium">Saved Filters</h3>
@@ -425,7 +419,6 @@ export function AdvanceFilterDrawer({
         </DrawerFooter>
       </DrawerContent>
 
-      {/* SAVE FILTER */}
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -469,7 +462,6 @@ export function AdvanceFilterDrawer({
         </DialogContent>
       </Dialog>
 
-      {/* REPLACE EXISTING */}
       <AlertDialog open={replaceDialogOpen} onOpenChange={setReplaceDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

@@ -39,17 +39,14 @@ export function CustomerDeleteDialog({
       <AlertDialogContent className="sm:max-w-[425px]">
         <AlertDialogHeader>
           <div className="flex items-center gap-4">
-            {/* ICON */}
             <div className="mb-2 flex size-10 items-center justify-center rounded-full bg-destructive/10">
               <Trash2 className="size-5 text-destructive" />
             </div>
 
-            {/* TITLE */}
             <AlertDialogTitle>
               {isBulk ? `Delete ${count} customers?` : "Delete customer?"}
             </AlertDialogTitle>
           </div>
-          {/* DESCRIPTION */}
           <AlertDialogDescription className="w-full">
             You are about to permanently delete{" "}
             {isBulk ? (

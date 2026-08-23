@@ -37,7 +37,6 @@ export function createColumns({
       enableHiding: false,
     }),
 
-    // SELECT
     columnHelper.display({
       id: "select",
 
@@ -69,7 +68,6 @@ export function createColumns({
       },
     }),
 
-    // CUSTOMER
     columnHelper.display({
       id: "customer",
 
@@ -108,7 +106,6 @@ export function createColumns({
       },
     }),
 
-    // PHONE
     columnHelper.accessor("phone", {
       header: "Phone",
 
@@ -117,12 +114,10 @@ export function createColumns({
       },
     }),
 
-    // COMPANY
     columnHelper.accessor("company", {
       header: "Company",
     }),
 
-    // STATUS
     columnHelper.accessor("status", {
       header: "Status",
 
@@ -137,7 +132,6 @@ export function createColumns({
       },
     }),
 
-    // LAST CONTACT
     columnHelper.accessor("lastContactDate", {
       header: "Last Contact",
 
@@ -146,7 +140,6 @@ export function createColumns({
       },
     }),
 
-    // ACTIONS
     columnHelper.display({
       id: "actions",
 
