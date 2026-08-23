@@ -43,7 +43,7 @@ interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<typeof features, TData>[]
   data: TData[]
 
-  pagination: {
+  pagination?: {
     page: number
     pageSize: number
     total: number
@@ -84,13 +84,13 @@ export function DataTable<TData extends RowData>({
     onRowSelectionChange: setRowSelection,
     onPaginationChange,
     manualPagination: true,
-    pageCount: pagination.totalPages,
+    pageCount: pagination?.totalPages,
     manualSorting: true,
   })
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end">
+      {/* <div className="flex items-center justify-end">
         <DropdownMenu>
           <DropdownMenuTrigger
             render={<Button variant="outline">Columns</Button>}
@@ -116,7 +116,7 @@ export function DataTable<TData extends RowData>({
               ))}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div> */}
 
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -128,8 +128,8 @@ export function DataTable<TData extends RowData>({
                     {header.isPlaceholder
                       ? null
                       : table.FlexRender({
-                          header,
-                        })}
+                        header,
+                      })}
                   </TableHead>
                 ))}
               </TableRow>
@@ -168,8 +168,8 @@ export function DataTable<TData extends RowData>({
 
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">
-          {pagination.total} customer
-          {pagination.total !== 1 ? "s" : ""}
+          {pagination?.total} customer
+          {pagination?.total !== 1 ? "s" : ""}
         </div>
 
         <div className="flex items-center gap-4">
@@ -200,7 +200,7 @@ export function DataTable<TData extends RowData>({
           </div>
 
           <span className="text-sm">
-            Page {pagination.page} of {pagination.totalPages}
+            Page {pagination?.page} of {pagination?.totalPages}
           </span>
 
           <div className="flex items-center gap-2">

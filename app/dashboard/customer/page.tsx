@@ -3,8 +3,15 @@
 import * as React from "react"
 
 import { useCustomers } from "@/features/customers/hooks/use-customers"
+import { companies } from "@/features/customers/data/customers"
 import { columns } from "@/features/customers/components/columns"
 import { DataTable } from "@/features/customers/components/customer-table"
+import { CustomerFilters } from "@/features/customers/components/customer-filters"
+
+import type {
+  CustomerStatus,
+  FilterState,
+} from "@/features/customers/types/types"
 
 export default function CustomerTest() {
   const [pagination, setPagination] = React.useState({
@@ -12,16 +19,61 @@ export default function CustomerTest() {
     pageSize: 10,
   })
 
-  const query = useCustomers({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize as 10 | 25 | 50,
-    filters: {
-      status: [],
-      companies: [],
-    },
+  const [search, setSearch] = React.useState("")
+  const [filters, setFilters] = React.useState<FilterState>({
+    status: [],
+    companies: [],
   })
 
-  const defualtMeta = { page: 1, pageSize: 10, total: 0, totalPages: 0 }
+  const query = useCustomers({
+    search: search || undefined,
+
+    page: pagination.pageIndex + 1,
+
+    pageSize:
+      pagination.pageSize as 10 | 25 | 50,
+
+    filters,
+  })
+
+  const handleSearchChange = (
+    value: string
+  ) => {
+    setSearch(value)
+
+    setPagination((previous) => ({
+      ...previous,
+      pageIndex: 0,
+    }))
+  }
+
+  const handleStatusChange = (
+    status: CustomerStatus | undefined
+  ) => {
+    setFilters((previous) => ({
+      ...previous,
+      status: status ? [status] : [],
+    }))
+
+    setPagination((previous) => ({
+      ...previous,
+      pageIndex: 0,
+    }))
+  }
+
+  const handleCompanyChange = (
+    company: string | undefined
+  ) => {
+    setFilters((previous) => ({
+      ...previous,
+      companies: company ? [company] : [],
+    }))
+
+    setPagination((previous) => ({
+      ...previous,
+      pageIndex: 0,
+    }))
+  }
 
   if (query.isPending) {
     return <div>Loading...</div>
@@ -36,11 +88,23 @@ export default function CustomerTest() {
   }
 
   return (
-    <section className="p-4">
+    <section className="space-y-4 p-4">
+      <CustomerFilters
+        search={search}
+        filters={filters}
+        companies={companies}
+        onSearchChange={handleSearchChange}
+        onStatusChange={handleStatusChange}
+        onCompanyChange={handleCompanyChange}
+        onAddCustomer={() => {
+          console.log("Add customer")
+        }}
+      />
+
       <DataTable
         columns={columns}
         data={query.data.data}
-        pagination={query.data.meta || defualtMeta}
+        pagination={query.data.meta}
         paginationState={pagination}
         onPaginationChange={setPagination}
       />
