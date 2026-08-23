@@ -47,6 +47,7 @@ export interface PaginationMeta {
 export type CustomersResponse = ApiResponse<Customer[], PaginationMeta>
 
 declare module "@tanstack/react-table" {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   interface ColumnMeta<
     TFeatures extends TableFeatures,
     TData extends RowData,
@@ -54,4 +55,5 @@ declare module "@tanstack/react-table" {
   > {
     className?: string
   }
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 }
