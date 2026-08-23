@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { toast } from "sonner"
 import { SlidersHorizontal, X } from "lucide-react"
 
 import { useCustomers } from "@/features/customers/hooks/use-customers"
@@ -9,9 +10,13 @@ import { useDebounce } from "@/hooks/use-debounce"
 import { AdvanceFilterDrawer } from "@/features/customers/components/advance-filter"
 import { CustomerFilters } from "@/features/customers/components/customer-filters"
 import { DataTable } from "@/features/customers/components/customer-table"
-
+import { CustomerDeleteDialog } from "@/features/customers/components/customer-delete-dialog"
 import { companies } from "@/features/customers/data/customers"
-import { columns } from "@/features/customers/components/columns"
+import { createColumns } from "@/features/customers/components/columns"
+import { CustomerDialog } from "@/features/customers/components/customer-dialog"
+import { useDeleteCustomer } from "@/features/customers/hooks/use-delete-customer"
+
+import type { Customer } from "@/features/customers/types/types"
 
 import type {
   CustomerStatus,
@@ -50,14 +55,17 @@ export default function CustomerPage() {
   const [searchInput, setSearchInput] = React.useState("")
   const search = useDebounce(searchInput, 500)
 
-  // Filters actually applied to the customer query.
   const [filters, setFilters] = React.useState<FilterState>(emptyFilters)
 
-  // Filters currently being edited inside the drawer.
   const [draftFilters, setDraftFilters] =
     React.useState<FilterState>(emptyFilters)
 
   const [filterDrawerOpen, setFilterDrawerOpen] = React.useState(false)
+
+  const [selectedCustomer, setSelectedCustomer] =
+    React.useState<Customer | null>(null)
+
+  const [customerViewMode, setCustomerViewMode] = React.useState(false)
 
   const query = useCustomers({
     search: search || undefined,
@@ -65,6 +73,12 @@ export default function CustomerPage() {
     pageSize: pagination.pageSize as 10 | 25 | 50,
     filters,
   })
+
+  const [customerDialogOpen, setCustomerDialogOpen] = React.useState(false)
+  const [customerToDelete, setCustomerToDelete] =
+    React.useState<Customer | null>(null)
+
+  const deleteCustomer = useDeleteCustomer()
 
   const resetPage = () => {
     setPagination((previous) => ({
@@ -96,28 +110,17 @@ export default function CustomerPage() {
     resetPage()
   }
 
-  /*
-   * Open drawer:
-   * copy currently applied filters into draft state.
-   */
   const handleFilterDrawerOpen = () => {
     setDraftFilters(cloneFilters(filters))
     setFilterDrawerOpen(true)
   }
 
-  /*
-   * User changes filters inside drawer.
-   * Nothing is applied to the table yet.
-   */
   const handleDraftFiltersChange: React.Dispatch<
     React.SetStateAction<FilterState>
   > = (value) => {
     setDraftFilters(value)
   }
 
-  /*
-   * Apply draft filters to the actual customer query.
-   */
   const handleApplyFilters = (nextFilters: FilterState) => {
     const next = cloneFilters(nextFilters)
 
@@ -128,9 +131,6 @@ export default function CustomerPage() {
     setFilterDrawerOpen(false)
   }
 
-  /*
-   * Clear everything.
-   */
   const handleClearFilters = () => {
     const empty = cloneFilters(emptyFilters)
 
@@ -140,9 +140,6 @@ export default function CustomerPage() {
     resetPage()
   }
 
-  /*
-   * Applying a saved filter immediately applies it.
-   */
   const handleApplySavedFilter = (nextFilters: FilterState) => {
     const next = cloneFilters(nextFilters)
 
@@ -153,12 +150,60 @@ export default function CustomerPage() {
     setFilterDrawerOpen(false)
   }
 
-  /*
-   * Cmd/Ctrl + K opens the drawer with current filters.
-   */
+  const handleAddCustomer = () => {
+    setCustomerDialogOpen(true)
+  }
+
+  const handleViewCustomer = React.useCallback((customer: Customer) => {
+    setSelectedCustomer(customer)
+    setCustomerViewMode(true)
+    setCustomerDialogOpen(true)
+  }, [])
+  const handleEditCustomer = React.useCallback((customer: Customer) => {
+    setSelectedCustomer(customer)
+    setCustomerViewMode(false)
+    setCustomerDialogOpen(true)
+  }, [])
+
+  const handleDeleteCustomer = React.useCallback((customer: Customer) => {
+    setCustomerToDelete(customer)
+  }, [])
+
+  const handleConfirmDelete = React.useCallback(() => {
+    if (!customerToDelete) {
+      return
+    }
+
+    deleteCustomer.mutate(customerToDelete.id, {
+      onSuccess: () => {
+        toast.success("Customer deleted successfully")
+        setCustomerToDelete(null)
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    })
+  }, [customerToDelete, deleteCustomer])
+
+  const columns = React.useMemo(
+    () =>
+      createColumns({
+        onView: handleViewCustomer,
+        onEdit: handleEditCustomer,
+        onDelete: handleDeleteCustomer,
+      }),
+    [handleViewCustomer, handleEditCustomer, handleDeleteCustomer]
+  )
+
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() !== "k") {
+      const key = event?.key
+
+      if (typeof key !== "string") {
+        return
+      }
+
+      if (key !== "k" && key !== "K") {
         return
       }
 
@@ -166,12 +211,12 @@ export default function CustomerPage() {
         return
       }
 
-      const target = event.target as HTMLElement
+      const target = event.target
 
       if (
         target instanceof HTMLInputElement ||
         target instanceof HTMLTextAreaElement ||
-        target.isContentEditable
+        (target instanceof HTMLElement && target.isContentEditable)
       ) {
         return
       }
@@ -254,11 +299,8 @@ export default function CustomerPage() {
         onSearchChange={handleSearchChange}
         onStatusChange={handleStatusChange}
         onCompanyChange={handleCompanyChange}
-        onAddCustomer={() => {
-          console.log("Add customer")
-        }}
+        onAddCustomer={handleAddCustomer}
       />
-
       {/* Table */}
       <DataTable
         columns={columns}
@@ -266,6 +308,33 @@ export default function CustomerPage() {
         pagination={query.data.meta}
         paginationState={pagination}
         onPaginationChange={setPagination}
+      />
+
+      <CustomerDialog
+        open={customerDialogOpen}
+        customer={selectedCustomer}
+        readOnly={customerViewMode}
+        onEdit={() => setCustomerViewMode(false)}
+        onOpenChange={(open) => {
+          setCustomerDialogOpen(open)
+
+          if (!open) {
+            setSelectedCustomer(null)
+            setCustomerViewMode(false)
+          }
+        }}
+      />
+
+      <CustomerDeleteDialog
+        customer={customerToDelete}
+        open={customerToDelete !== null}
+        isPending={deleteCustomer.isPending}
+        onOpenChange={(open) => {
+          if (!open && !deleteCustomer.isPending) {
+            setCustomerToDelete(null)
+          }
+        }}
+        onConfirm={handleConfirmDelete}
       />
     </section>
   )

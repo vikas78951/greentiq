@@ -53,6 +53,8 @@ export const createCustomerSchema = customerFieldsSchema
 
 export const updateCustomerSchema = customerFieldsSchema.partial()
 
-export type CreateCustomerInput = z.infer<typeof createCustomerSchema>
+export type CreateCustomerInput = z.output<typeof createCustomerSchema>
+
+export type CreateCustomerFormInput = z.input<typeof createCustomerSchema>
 
 export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>

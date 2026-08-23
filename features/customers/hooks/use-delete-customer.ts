@@ -8,7 +8,9 @@ async function deleteCustomer(id: string): Promise<void> {
   })
 
   if (!response.ok) {
-    throw new Error("Failed to delete customer")
+    const result = await response.json()
+
+    throw new Error(result?.error?.message ?? "Failed to delete customer")
   }
 }
 
@@ -18,14 +20,15 @@ export function useDeleteCustomer() {
   return useMutation({
     mutationFn: deleteCustomer,
 
-    onSuccess: (_, id) => {
-      queryClient.removeQueries({
-        queryKey: ["customers", id],
-      })
-
-      queryClient.invalidateQueries({
-        queryKey: ["customers"],
-      })
+    onSuccess: async (_, id) => {
+      await Promise.all([
+        queryClient.removeQueries({
+          queryKey: ["customers", id],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["customers"],
+        }),
+      ])
     },
   })
 }

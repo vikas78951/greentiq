@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import type { Customer } from "@/features/customers/types/types"
-import { CreateCustomerInput } from "../schemas/customer-schema"
+import type { CreateCustomerInput } from "../schemas/customer-schema"
 import type { ApiResponse } from "@/types/types"
 
 async function createCustomer(
@@ -17,11 +17,13 @@ async function createCustomer(
     body: JSON.stringify(input),
   })
 
+  const result = await response.json()
+
   if (!response.ok) {
-    throw new Error("Failed to create customer")
+    throw new Error(result?.error?.message ?? "Failed to create customer")
   }
 
-  return response.json()
+  return result
 }
 
 export function useCreateCustomer() {
